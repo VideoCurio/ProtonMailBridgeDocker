@@ -8,7 +8,7 @@ Download the latest docker image from:
 ```bash
 docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 ```
-(Optional) It is recommended to setup a custom docker network for all of your containers to use, for DNS / network-alias resolution:
+(Optional) It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
 ```bash
 sudo docker network create --subnet 172.20.0.0/16 network20
 ```
