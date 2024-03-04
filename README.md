@@ -15,7 +15,7 @@ sudo docker network create --subnet 172.20.0.0/16 network20
 
 Launch it with this command to map TCP ports 12025 for SMTP and 12143 for IMAP on your local loopback:
 ```bash
-docker run -d --name=protonmail_bridge -p 127.0.0.1:12025:1025/tcp -p 127.0.0.1:12143:1143/tcp --network network20 --restart=unless-stopped videocurio/proton-mail-bridge:latest
+docker run -d --name=protonmail_bridge -p 127.0.0.1:12025:1025/tcp -p 127.0.0.1:12143:1143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
 Now, you need to open a bash terminal on the current running container and use the Proton Bridge interactive command line:
@@ -53,6 +53,8 @@ docker images | grep videocurio
 docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:3.9.1a
 docker push ghcr.io/videocurio/proton-mail-bridge:latest
 docker push ghcr.io/videocurio/proton-mail-bridge:3.9.1a
+
+docker container logs protonmail_bridge
 ```
 
 ## Sources:
