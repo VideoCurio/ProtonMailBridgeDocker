@@ -11,9 +11,13 @@ if [ ! -d "/root/.password-store/" ]; then
   pass init ProtonMailBridge
 fi
 
-# Start Proton Bridge on a fake tty
+# Proton mail bridge listen only on 127.0.0.1 interface, we need to forward TCP traffic on SMTP and IMAP ports:
+socat TCP-LISTEN:1025,fork TCP:127.0.0.1:1025 &
+socat TCP-LISTEN:1143,fork TCP:127.0.0.1:1143 &
+
+# Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty
 mkfifo faketty
-cat faketty | /protonmailbridge/bridge --cli "$@"
+cat faketty | /protonmailbridge/bridge --cli
 
 echo "Done."
