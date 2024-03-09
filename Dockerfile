@@ -14,8 +14,9 @@ RUN make build-nogui
 FROM golang:bookworm
 LABEL authors="David BASTIEN"
 
-# EXPOSE 1025/tcp
-# EXPOSE 1143/tcp
+# Expose SMTP and IMAP ports
+EXPOSE 25/tcp
+EXPOSE 143/tcp
 
 RUN apt-get update && apt-get install -y bash socat pass ca-certificates libsecret-1-0
 # Copy executables made during previous stage
@@ -27,5 +28,8 @@ COPY --from=build /build/proton-bridge/proton-bridge /protonmailbridge/
 COPY entrypoint.sh /protonmailbridge/
 RUN chmod u+x /protonmailbridge/entrypoint.sh
 COPY GPGparams.txt /protonmailbridge/
+
+# Volume to save pass and bridge configurations/data
+VOLUME /root
 
 ENTRYPOINT ["/protonmailbridge/entrypoint.sh"]

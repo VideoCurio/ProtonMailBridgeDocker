@@ -15,9 +15,10 @@ docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 sudo docker network create --subnet 172.20.0.0/16 network20
 ```
 
-Launch it with this command to map TCP ports 12025 for SMTP and 12143 for IMAP on your local loopback:
+Launch it with the following command to map TCP ports 12025 for SMTP and 12143 for IMAP on your local loopback.
+**You SHOULD provide a path volume storage**.
 ```bash
-docker run -d --name=protonmail_bridge -p 127.0.0.1:12025:1025/tcp -p 127.0.0.1:12143:1143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
+docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
 (Optional) Make sure the container is running:
@@ -32,6 +33,8 @@ d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/protonmailbridge
 Now, you need to open a bash terminal on the current running container and use the Proton Bridge interactive command line:
 ```bash
 docker exec -it protonmail_bridge /bin/bash
+```
+```
 # First we need to kill the default bridge startup instance (only one instance of bridge can run at the same time)
 root@8972584f86d4:/protonmailbridge# pkill bridge
 # Login to your Proton account:
@@ -55,11 +58,11 @@ Account test_account was added successfully.
 >>> A sync has begun for test_account.
 Sync (test_account): 1.0% (Elapsed: 0.5s, ETA: 46.0s)
 ...
-Sync (test_account): 99.9% (Elapsed: 0.5s, ETA: 0.4s)
+Sync (test_account): 99.9% (Elapsed: 50.4s, ETA: 0.4s)
 A sync has finished for test_account.
 >>>
 
-# IF you are using multiple domain names or email addresses, you SHOULD switch to split address mode (it will set credentials for each address):
+# IF you are using multiple domain names or email addresses, you SHOULD switch to split address mode (it will set credentials for each address in the account):
 # It will sync the account again, time to grab a coffee.
 >>> change mode 0
 Are you sure you want to change the mode for account test_account to split? yes/no: yes
@@ -67,11 +70,15 @@ Address mode for account test_account changed to split
 >>> A sync has begun for test_account.
 Sync (test_account): 1.0% (Elapsed: 0.3s, ETA: 32.6s)
 ...
-Sync (test_account): 99.9% (Elapsed: 0.5s, ETA: 0.4s)
+Sync (test_account): 99.9% (Elapsed: 50.4s, ETA: 0.4s)
 A sync has finished for test_account.
 >>>
+```
 
-# Use the following information to connect via a SMTP client:
+Use the following information to connect via an SMTP client. The port numbers for the SMTP/IMAP connections are 12025 and 12143 (See your previous Docker container launch command).
+
+You **MUST copy the username AND password** from the info command:
+```
 >>> info
 Configuration for test_account@proton.me
 IMAP Settings
@@ -106,6 +113,7 @@ docker container restart protonmail_bridge
 ```bash
 docker container logs protonmail_bridge
 ```
+It should end with `A sync has finished for test_account`
 
 ## Developers notes
 
