@@ -77,7 +77,7 @@ A sync has finished for test_account.
 
 Use the following information to connect via an SMTP client. The port numbers for the SMTP/IMAP connections are 12025 and 12143 (See your previous Docker container launch command).
 
-You **MUST copy the username AND password** from the info command:
+You **MUST copy the username AND password** from the info command (the password is random and different from your Proton account):
 ```
 >>> info
 Configuration for test_account@proton.me
@@ -115,6 +115,10 @@ docker container logs protonmail_bridge
 ```
 It should end with `A sync has finished for test_account`
 
+## Notes
+
+Your email client might complain about the self-signed certificate used by Proton mail bridge server.
+
 ## Developers notes
 
 Build docker image, see: [Docker documentation](https://docs.docker.com/language/python/containerize/)
@@ -130,10 +134,8 @@ docker push ghcr.io/videocurio/proton-mail-bridge:3.9.1a
 docker push ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
+An experimental [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the Alpine directory - BUGGED - Do not use it yet in production!
+
 ## Sources:
 
 Made from [Debian 12 (bookworm) Go image](https://hub.docker.com/_/golang/) and [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master) v3.9.1
-
-## Notes
-
-An experimental [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the Alpine directory - BUGGED - Do not use it yet in production!
