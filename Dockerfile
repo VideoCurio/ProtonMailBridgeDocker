@@ -38,6 +38,8 @@ COPY entrypoint.sh /app/
 RUN chmod u+x /app/entrypoint.sh
 COPY GPGparams.txt /app/
 
+COPY LICENSE.txt /app/
+
 # Expose SMTP and IMAP ports
 # The entrypoint script will forward this ports to the ports really used by Proton mail bridge.
 EXPOSE 25/tcp
