@@ -10,6 +10,10 @@ Download the latest docker image from:
 ```bash
 docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 ```
+**(Alternative)** Or the lightweight version based on Alpine Linux:
+```bash
+docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
+```
 **(Optional)** It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
 ```bash
 sudo docker network create --subnet 172.20.0.0/16 network20
@@ -146,7 +150,6 @@ should report the Proton bridge mail as:
 ```
 ix-protonmail-bridge    protonmail-bridge-ix-chart      NodePort    172.17.22.33    <none>  25:12025/TCP        1h
 ```
-
 The SMTP server is now available from TCP port 12025 on your server's LAN IP address.
 
 ## Developers notes
@@ -166,7 +169,9 @@ docker push ghcr.io/videocurio/proton-mail-bridge:3.9.1a
 docker push ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
-An experimental [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the Alpine directory - EXPERIMENTAL - Do not use it yet in production!
+There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a patch.
+
+An [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/master/Alpine).
 
 ## Sources:
 
