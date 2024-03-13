@@ -1,6 +1,6 @@
 # Proton Mail Bridge docker - Alpine Linux version
 
-A lightweight version based on [Alpine Linux](https://www.alpinelinux.org/).
+A version based on [Alpine Linux](https://www.alpinelinux.org/). Same functionalities but in a lightweight image.
 
 ```bash
 docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest

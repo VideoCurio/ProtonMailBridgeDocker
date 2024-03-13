@@ -171,7 +171,7 @@ docker push ghcr.io/videocurio/proton-mail-bridge:latest
 
 There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a patch.
 
-A lightweight [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/master/Alpine).
+An [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/master/Alpine).
 
 ## Sources:
 

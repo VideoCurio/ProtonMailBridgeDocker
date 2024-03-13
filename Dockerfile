@@ -13,6 +13,7 @@ RUN make build-nogui
 # Working stage image
 FROM golang:bookworm
 LABEL authors="David BASTIEN"
+LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
 # Define arguments and env variables
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
