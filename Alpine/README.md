@@ -1,6 +1,13 @@
 # Proton Mail Bridge docker - Alpine Linux version
 
-**EXPERIMENTAL** - Do not use in production !
+A lightweight version based on [Alpine Linux](https://www.alpinelinux.org/).
+
+```bash
+docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
+```
+```bash
+docker run -d --name=protonmail_bridge_alpine -v /path/to/your/volume/storage-alpine:/root -p 127.0.0.1:14025:25/tcp -p 127.0.0.1:14143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge-alpine:latest
+```
 
 For install and setup, see [README](https://github.com/VideoCurio/ProtonMailBridgeDocker).
 

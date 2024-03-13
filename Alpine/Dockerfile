@@ -15,11 +15,13 @@ WORKDIR /build/proton-bridge/
 COPY fix_1177.sh /build/proton-bridge/
 RUN chmod u+x /build/proton-bridge/fix_1177.sh
 RUN /bin/bash -c '/build/proton-bridge/fix_1177.sh'
+# make
 RUN make build-nogui
 
 # Working stage image
 FROM golang:1.22-alpine
 LABEL authors="David BASTIEN"
+LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
 # Define arguments and env variables
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
