@@ -4,6 +4,9 @@ A docker version of the [Proton mail Bridge](https://proton.me/mail/bridge) comm
 
 __!WARNING!__ As of the time of this writing, you need a paid plan (Mail Plus, Proton Unlimited or Proton for Business) to be able to log in. It won't work for free account.
 
+![Logo Proton Mail Bridge docker](https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/logo.png "Merci à Korben pour le logo!")
+_(Merci [Korben](https://korben.info/) pour le logo)_
+
 ## Install
 
 Download the latest docker image from:
@@ -167,6 +170,11 @@ docker run -it --rm --entrypoint /bin/bash ghcr.io/videocurio/proton-mail-bridge
 docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:3.9.1a
 docker push ghcr.io/videocurio/proton-mail-bridge:3.9.1a
 docker push ghcr.io/videocurio/proton-mail-bridge:latest
+
+### TrueNAS
+ping -c 4 protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local
+nslookup protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local 172.17.0.10
+
 ```
 
 There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a patch.
