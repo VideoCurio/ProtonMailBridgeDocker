@@ -155,11 +155,20 @@ ix-protonmail-bridge    protonmail-bridge-ix-chart      NodePort    172.17.22.33
 ```
 The SMTP server is now available from TCP port 12025 on your server's LAN IP address.
 
+## Changelogs
+
+* 2024/04/30: updated to Proton Mail Bridge v3.11.0
+* 2024/03/04: Initial public release, Proton Mail Bridge v3.9.1
+
 ## Developers notes
 
 Build / test docker image, see: [Docker documentation](https://docs.docker.com/language/python/containerize/)
 ```bash
 # Local tests:
+docker pull golang:bookworm
+# and/or
+docker pull golang:1.22-alpine
+
 git clone https://github.com/VideoCurio/ProtonMailBridgeDocker.git
 cd /path/to/ProtonMailBridgeDocker/
 docker build --tag=ghcr.io/videocurio/proton-mail-bridge .
