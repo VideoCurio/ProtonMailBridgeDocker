@@ -35,6 +35,11 @@ CONTAINER ID   IMAGE                                          COMMAND           
 d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/app/entrypoint.sh"     About a minute ago   Up About a minute   127.0.0.1:12025->1025/tcp, 127.0.0.1:12143->1143/tcp   protonmail_bridge
 ```
 
+**(Optional)** You can check the bridge command line output with, you should see a bridge in ASCII art:
+```bash
+docker container logs protonmail_bridge
+```
+
 ## Setup
 
 Now, you need to open a bash terminal on the current running container and use the Proton Bridge interactive command line:
@@ -86,7 +91,7 @@ A sync has finished for test_account.
 >>>
 ```
 
-Use the following information to connect via an SMTP client. The port numbers for the SMTP/IMAP connections are 12025 and 12143 (see your previous Docker container launch command), not the one provided by the `info`command.
+Use the following information to connect via an SMTP client. The port numbers for the SMTP/IMAP connections are 12025 and 12143 (see command `docker ps`), **NOT** the one provided by the `info`command.
 
 You **_MUST copy the username AND password_** from the info command (the password is random and different from your Proton account):
 ```
@@ -157,6 +162,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelogs
 
+* 2024/09/05: updated to Proton Mail Bridge v3.12.0, Alpine version: update to Golang 1.23
 * 2024/04/30: updated to Proton Mail Bridge v3.11.0
 * 2024/03/04: Initial public release, Proton Mail Bridge v3.9.1
 
@@ -167,7 +173,7 @@ Build / test docker image, see: [Docker documentation](https://docs.docker.com/l
 # Local tests:
 docker pull golang:bookworm
 # and/or
-docker pull golang:1.22-alpine
+docker pull golang:1.23-alpine
 
 git clone https://github.com/VideoCurio/ProtonMailBridgeDocker.git
 cd /path/to/ProtonMailBridgeDocker/
@@ -209,4 +215,4 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Sources:
 
-Made from [Debian 12 (bookworm) Go image](https://hub.docker.com/_/golang/) and [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master) v3.9.1
+Made from [Debian 12 (bookworm) Go image](https://hub.docker.com/_/golang/) and latest [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master)

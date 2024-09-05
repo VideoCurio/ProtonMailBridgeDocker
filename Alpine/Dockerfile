@@ -1,4 +1,4 @@
-FROM golang:1.22-alpine AS build
+FROM golang:1.23-alpine AS build
 LABEL authors="David BASTIEN"
 
 # Install dependencies
@@ -11,15 +11,16 @@ RUN apk add git libsecret libsecret-dev pass
 WORKDIR /build/
 RUN git clone https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
+# Not needed anymore, golang 1.23 seems to have solved this.
 # Solve bug https://github.com/mattn/go-sqlite3/pull/1177
-COPY fix_1177.sh /build/proton-bridge/
-RUN chmod u+x /build/proton-bridge/fix_1177.sh
-RUN /bin/bash -c '/build/proton-bridge/fix_1177.sh'
+# COPY fix_1177.sh /build/proton-bridge/
+# RUN chmod u+x /build/proton-bridge/fix_1177.sh
+# RUN /bin/bash -c '/build/proton-bridge/fix_1177.sh'
 # make
 RUN make build-nogui
 
 # Working stage image
-FROM golang:1.22-alpine
+FROM golang:1.23-alpine
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 

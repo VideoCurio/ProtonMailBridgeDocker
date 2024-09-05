@@ -27,6 +27,9 @@ docker push ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 
 docker run -it --rm --entrypoint /bin/bash ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 
+# (Optional) It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
+sudo docker network create --subnet 172.20.0.0/16 network20
+
 mkdir /path/to/your/volume/storage-alpine
 docker run -d --name=protonmail_bridge_alpine -v /path/to/your/volume/storage-alpine:/root -p 127.0.0.1:14025:25/tcp -p 127.0.0.1:14143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 
