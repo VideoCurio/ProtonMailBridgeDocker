@@ -2,7 +2,9 @@
 
 set -ex
 
-echo "Welcome to my Proton Mail Bridge docker container v3.12.0b !"
+VERSION=$(cat VERSION)
+
+echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
 echo "Copyright (C) 2024  David BASTIEN - See /app/LICENSE.txt "
 
 # Check if the gpg key exist, if not created it. Should be run only on first launch.

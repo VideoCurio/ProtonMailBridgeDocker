@@ -23,7 +23,7 @@ sudo docker network create --subnet 172.20.0.0/16 network20
 ```
 
 Launch it with the following command to expose TCP ports 12025 for SMTP and 12143 for IMAP on your local network interface.
-**_You SHOULD provide a path volume storage_** (`mkdir /path/to/your/volume/storage`).
+**_You MUST provide a path volume storage_** (`mkdir /path/to/your/volume/storage`).
 ```bash
 docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
@@ -172,19 +172,22 @@ Build / test docker image, see: [Docker documentation](https://docs.docker.com/l
 ```bash
 # Local tests:
 docker pull golang:bookworm
-# and/or
-docker pull golang:1.23-alpine
 
 git clone https://github.com/VideoCurio/ProtonMailBridgeDocker.git
 cd /path/to/ProtonMailBridgeDocker/
 docker build --tag=ghcr.io/videocurio/proton-mail-bridge .
-docker images | grep videocurio
+docker images | grep proton-mail
 
 docker run -it --rm --entrypoint /bin/bash ghcr.io/videocurio/proton-mail-bridge:latest
+# (Optional) It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
+sudo docker network create --subnet 172.20.0.0/16 network20
 
-docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:3.9.1a
-docker push ghcr.io/videocurio/proton-mail-bridge:3.9.1a
-docker push ghcr.io/videocurio/proton-mail-bridge:latest
+mkdir /path/to/your/volume/storage
+docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:14025:25/tcp -p 127.0.0.1:14143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
+docker container logs protonmail_bridge
+
+docker exec -it protonmail_bridge /bin/bash
+>>> info
 
 ### TrueNAS
 ping -c 4 protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local
