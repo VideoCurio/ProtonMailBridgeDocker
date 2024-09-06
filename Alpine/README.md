@@ -16,14 +16,12 @@ For install and setup, see [README](https://github.com/VideoCurio/ProtonMailBrid
 Build docker image, see: [Docker documentation](https://docs.docker.com/language/python/containerize/)
 ```bash
 # Local tests:
+docker pull golang:1.23-alpine
+
 git clone https://github.com/VideoCurio/ProtonMailBridgeDocker.git
 cd /path/to/ProtonMailBridgeDocker/Alpine/
 docker build --tag=ghcr.io/videocurio/proton-mail-bridge-alpine .
-docker images | grep videocurio
-
-docker image tag ghcr.io/videocurio/proton-mail-bridge-alpine:latest ghcr.io/videocurio/proton-mail-bridge-alpine:3.9.1a
-docker push ghcr.io/videocurio/proton-mail-bridge-alpine:3.9.1a
-docker push ghcr.io/videocurio/proton-mail-bridge-alpine:latest
+docker images | grep proton-mail
 
 docker run -it --rm --entrypoint /bin/bash ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 

@@ -50,6 +50,7 @@ COPY --from=build /build/proton-bridge/bridge /app/
 COPY --from=build /build/proton-bridge/proton-bridge /app/
 
 # Install needed scripts and files
+COPY VERSION /app/
 COPY entrypoint.sh /app/
 RUN chmod u+x /app/entrypoint.sh
 COPY GPGparams.txt /app/
