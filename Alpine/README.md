@@ -8,6 +8,11 @@ docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 ```bash
 docker run -d --name=protonmail_bridge_alpine -v /path/to/your/volume/storage-alpine:/root -p 127.0.0.1:14025:25/tcp -p 127.0.0.1:14143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 ```
+**OR** (docker compose version):
+```bash
+wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/Alpine/compose.yaml
+docker-compose up -d
+```
 
 For install and setup, see [README](https://github.com/VideoCurio/ProtonMailBridgeDocker).
 

@@ -1,0 +1,18 @@
+services:
+    protonmail-bridge:
+        container_name: protonmail_bridge
+        volumes:
+            - mail_data:/root
+        ports:
+            - 127.0.0.1:12025:25/tcp
+            - 127.0.0.1:12143:143/tcp
+        networks:
+            - network20
+        restart: unless-stopped
+        image: ghcr.io/videocurio/proton-mail-bridge:latest
+networks:
+    network20:
+        external: true
+        name: network20
+volumes:
+    mail_data:

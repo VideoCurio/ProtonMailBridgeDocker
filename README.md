@@ -27,6 +27,11 @@ Launch it with the following command to expose TCP ports 12025 for SMTP and 1214
 ```bash
 docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
+**OR** (docker compose version):
+```bash
+wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/compose.yaml
+docker-compose up -d
+```
 
 **(Optional)** Make sure the container is running:
 ```bash
@@ -38,6 +43,10 @@ d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/app/entrypoint.s
 **(Optional)** You can check the bridge command line output with, you should see a bridge in ASCII art:
 ```bash
 docker container logs protonmail_bridge
+```
+**OR** (docker compose version):
+```bash
+docker-compose logs
 ```
 
 ## Setup
@@ -124,12 +133,16 @@ We have killed the default bridge instance by exiting it during the previous ste
 ```bash
 docker container restart protonmail_bridge
 ```
+**OR** (docker compose version):
+```bash
+docker-compose restart
+```
 
 **(Optional)** You can check the bridge command line output with:
 ```bash
 docker container logs protonmail_bridge
 ```
-It should end with `A sync has finished for test_account`
+It should end with `A sync has finished for name_of_your_account`
 
 ## Notes
 
@@ -162,6 +175,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelogs
 
+* 2024/09/12: added a default compose yaml file for docker compose users.
 * 2024/09/05: updated to Proton Mail Bridge v3.12.0, Alpine version: update to Golang 1.23
 * 2024/04/30: updated to Proton Mail Bridge v3.11.0
 * 2024/03/04: Initial public release, Proton Mail Bridge v3.9.1
