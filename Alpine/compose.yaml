@@ -1,6 +1,6 @@
 services:
     protonmail-bridge:
-        container_name: protonmail_bridge
+        container_name: protonmail_bridge_alpine
         volumes:
             - mail_data:/root
         ports:

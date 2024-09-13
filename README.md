@@ -55,6 +55,10 @@ Now, you need to open a bash terminal on the current running container and use t
 ```bash
 docker exec -it protonmail_bridge /bin/bash
 ```
+**OR** for the Alpine version:
+```bash
+docker exec -it protonmail_bridge_alpine /bin/bash
+```
 ```
 # First we need to kill the default bridge startup instance (only one instance of bridge can run at the same time)
 root@8972584f86d4:/app# pkill bridge
@@ -175,6 +179,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelogs
 
+* 2024/09/13: updated to Proton Mail Bridge v3.13.0
 * 2024/09/12: added a default compose yaml file for docker compose users.
 * 2024/09/05: updated to Proton Mail Bridge v3.12.0, Alpine version: update to Golang 1.23
 * 2024/04/30: updated to Proton Mail Bridge v3.11.0
