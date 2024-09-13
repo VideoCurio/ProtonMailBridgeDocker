@@ -1,5 +1,6 @@
 FROM golang:1.23-alpine AS build
 LABEL authors="David BASTIEN"
+ARG ENV_PROTONMAIL_BRIDGE_VERSION
 
 # Install dependencies
 RUN apk update
@@ -9,7 +10,7 @@ RUN apk add git libsecret libsecret-dev pass
 
 # Build stage
 WORKDIR /build/
-RUN git clone https://github.com/ProtonMail/proton-bridge.git
+RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
 # Not needed anymore, golang 1.23 seems to have solved this.
 # Solve bug https://github.com/mattn/go-sqlite3/pull/1177

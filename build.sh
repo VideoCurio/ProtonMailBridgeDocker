@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-VERSION=$(cat VERSION)
+PROTONMAIL_BRIDGE_VERSION=$(cat VERSION)
 
-echo "Building Proton Mail Bridge docker images ${VERSION} !"
+echo "Building Proton Mail Bridge docker images ${PROTONMAIL_BRIDGE_VERSION} !"
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
@@ -13,8 +13,8 @@ docker pull golang:1.23-alpine
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
 echo "Building Debian image..."
-docker build --tag=ghcr.io/videocurio/proton-mail-bridge .
-docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:"$VERSION"
+docker build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --tag=ghcr.io/videocurio/proton-mail-bridge .
+docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:"$PROTONMAIL_BRIDGE_VERSION"
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
@@ -22,8 +22,8 @@ echo "Building Alpine image..."
 cd Alpine/ || exit
 cp ../VERSION VERSION
 
-docker build --tag=ghcr.io/videocurio/proton-mail-bridge-alpine .
-docker image tag ghcr.io/videocurio/proton-mail-bridge-alpine:latest ghcr.io/videocurio/proton-mail-bridge-alpine:"$VERSION"
+docker build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --tag=ghcr.io/videocurio/proton-mail-bridge-alpine .
+docker image tag ghcr.io/videocurio/proton-mail-bridge-alpine:latest ghcr.io/videocurio/proton-mail-bridge-alpine:"$PROTONMAIL_BRIDGE_VERSION"
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
@@ -42,9 +42,9 @@ read -p "Push docker images to ghcr.io ? (y/n) " yn
 
 case $yn in
   [yY] ) echo "Uploading docker images...";
-    docker push ghcr.io/videocurio/proton-mail-bridge:"$VERSION";
+    docker push ghcr.io/videocurio/proton-mail-bridge:"$PROTONMAIL_BRIDGE_VERSION";
     docker push ghcr.io/videocurio/proton-mail-bridge:latest;
-    docker push ghcr.io/videocurio/proton-mail-bridge-alpine:"$VERSION";
+    docker push ghcr.io/videocurio/proton-mail-bridge-alpine:"$PROTONMAIL_BRIDGE_VERSION";
     docker push ghcr.io/videocurio/proton-mail-bridge-alpine:latest;
     break;;
   [nN] ) echo "Exiting...";

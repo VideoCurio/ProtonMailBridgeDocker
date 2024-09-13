@@ -1,12 +1,13 @@
 FROM golang:bookworm AS build
 LABEL authors="David BASTIEN"
+ARG ENV_PROTONMAIL_BRIDGE_VERSION
 
 # Install dependencies
 RUN apt-get update && apt-get install -y git build-essential libsecret-1-dev
 
 # Build stage
 WORKDIR /build/
-RUN git clone https://github.com/ProtonMail/proton-bridge.git
+RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
 RUN make build-nogui
 
