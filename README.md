@@ -37,7 +37,7 @@ docker-compose up -d
 ```bash
 docker ps
 CONTAINER ID   IMAGE                                          COMMAND                  CREATED              STATUS              PORTS                                                  NAMES
-d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/app/entrypoint.sh"     About a minute ago   Up About a minute   127.0.0.1:12025->1025/tcp, 127.0.0.1:12143->1143/tcp   protonmail_bridge
+d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/app/entrypoint.sh"     About a minute ago   Up About a minute   127.0.0.1:12025->25/tcp, 127.0.0.1:12143->143/tcp   protonmail_bridge
 ```
 
 **(Optional)** You can check the bridge command line output with, you should see a bridge in ASCII art:
@@ -177,9 +177,9 @@ ix-protonmail-bridge    protonmail-bridge-ix-chart      NodePort    172.17.22.33
 ```
 The SMTP server is now available from TCP port 12025 on your server's LAN IP address.
 
-## Changelogs
+## Changelog
 
-* 2025/02/14: updated to Proton Mail Bridge v3.17.0
+* 2025/02/21: updated to Proton Mail Bridge v3.17.0
 * 2024/10/02: updated to Proton Mail Bridge v3.14.0
 * 2024/09/13: updated to Proton Mail Bridge v3.13.0
 * 2024/09/12: added a default compose yaml file for docker compose users.
