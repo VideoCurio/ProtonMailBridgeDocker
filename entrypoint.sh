@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -ex
+set -e
 
 VERSION=$(cat VERSION)
 
@@ -26,8 +26,15 @@ if ! [[ -v PROTON_BRIDGE_HOST ]]; then
 fi
 
 # Proton mail bridge listen only on 127.0.0.1 interface, we need to forward TCP traffic on SMTP and IMAP ports:
-socat TCP-LISTEN:25,fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
-socat TCP-LISTEN:143,fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
+[[ $PROTON_BRIDGE_ENABLE_SMTP_FORWARD == 'yes' ]] && {
+    echo "Start port forwarding from 25 to $PROTON_BRIDGE_HOST:$PROTON_BRIDGE_SMTP_PORT"
+    socat TCP-LISTEN:25,fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
+}
+
+[[ $PROTON_BRIDGE_ENABLE_IMAP_FORWARD == 'yes' ]] && {
+    echo "Start port forwarding from 143 to $PROTON_BRIDGE_HOST:$PROTON_BRIDGE_IMAP_PORT"
+    socat TCP-LISTEN:143,fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
+}
 
 # Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty
