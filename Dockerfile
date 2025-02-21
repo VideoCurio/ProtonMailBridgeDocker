@@ -23,9 +23,14 @@ LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailB
 ARG ENV_BRIDGE_SMTP_PORT=1025
 ARG ENV_BRIDGE_IMAP_PORT=1143
 ARG ENV_BRIDGE_HOST=127.0.0.1
+# Change ENV_CONTAINER_SMTP_PORT only if you have a docker port conflict on host network namespace.
+ARG ENV_CONTAINER_SMTP_PORT=25
+ARG ENV_CONTAINER_IMAP_PORT=143
 ENV PROTON_BRIDGE_SMTP_PORT=$ENV_BRIDGE_SMTP_PORT
 ENV PROTON_BRIDGE_IMAP_PORT=$ENV_BRIDGE_IMAP_PORT
 ENV PROTON_BRIDGE_HOST=$ENV_BRIDGE_HOST
+ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
+ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 
 # Install dependencies
 RUN apt-get update && apt-get install -y bash socat net-tools pass ca-certificates libsecret-1-0
@@ -44,8 +49,8 @@ COPY LICENSE.txt /app/
 
 # Expose SMTP and IMAP ports
 # The entrypoint script will forward this ports to the ports really used by Proton mail bridge.
-EXPOSE 25/tcp
-EXPOSE 143/tcp
+EXPOSE ${ENV_CONTAINER_SMTP_PORT}/tcp
+EXPOSE ${ENV_CONTAINER_IMAP_PORT}/tcp
 
 # Volume to save pass and bridge configurations/data
 VOLUME /root
