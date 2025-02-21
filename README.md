@@ -177,7 +177,7 @@ ix-protonmail-bridge    protonmail-bridge-ix-chart      NodePort    172.17.22.33
 ```
 The SMTP server is now available from TCP port 12025 on your server's LAN IP address.
 
-## Changelogs
+## Changelog
 
 * 2025/02/21: updated to Proton Mail Bridge v3.17.0
 * 2024/10/02: updated to Proton Mail Bridge v3.14.0
