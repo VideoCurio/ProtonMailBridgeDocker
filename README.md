@@ -179,6 +179,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelogs
 
+* 2025/02/14: updated to Proton Mail Bridge v3.17.0
 * 2024/10/02: updated to Proton Mail Bridge v3.14.0
 * 2024/09/13: updated to Proton Mail Bridge v3.13.0
 * 2024/09/12: added a default compose yaml file for docker compose users.
