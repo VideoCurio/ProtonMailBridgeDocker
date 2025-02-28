@@ -153,7 +153,19 @@ It should end with `A sync has finished for name_of_your_account`
 1. Your email client might complain about the self-signed certificate used by Proton mail bridge server.
 2. If you want other docker containers to only be able to send emails, you should only expose SMTP port 25.
 
-### TrueNAS Scale
+### TrueNAS Scale 24.10 or superior (TrueNAS apps as docker containers)
+The docker image was tested on the latest stable version of [TrueNAS Scale](https://www.truenas.com/truenas-scale/) 24.10 (at the time of writing),
+follow the [installation custom app screen](https://www.truenas.com/docs/truenasapps/usingcustomapp/) documentation.
+You should define a [Dataset](https://www.truenas.com/docs/scale/24.10/scaleuireference/datasets/) to save your Proton mail data before installing the app.
+
+The recommended parameters are:
+1. **Image Configuration** - Image repository: `ghcr.io/videocurio/proton-mail-bridge` / Image tag: `latest` / Pull policy: `Always pull...`
+2. **Container Configuration** - Entrypoint: `/app/entrypoint.sh` / Restart Policy: `Unless stopped`
+3. **Network Configuration** - Add > Container Port: `25` / Host Port: `12025` (Or any other non-used port) / Protocol: `TCP`
+4. **Storage Configuration** - Storage Add > Type: `Host path` / Mount Path: `/root` / Host path: `/mnt/path/to/your/protonmail-dataset` 
+5. **Resource Configuration** - `Check` Enable resource limits, configure the limits to your liking.
+
+### TrueNAS Scale 24.04 or inferior (TrueNAS apps as Kubernetes)
 The docker image was tested on the latest stable version of [TrueNAS Scale](https://www.truenas.com/truenas-scale/) (at the time of writing),
 follow the [installation custom app screen](https://www.truenas.com/docs/scale/scaleuireference/apps/installcustomappscreens/) documentation.
 
@@ -179,6 +191,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelog
 
+* 2025/02/28: updated to Proton Mail Bridge v3.18.0, added environment variables CONTAINER_SMTP_PORT (default set to 25) and CONTAINER_IMAP_PORT (default set to 143), change this only if you have another MTA on the same docker network to prevent port conflict.
 * 2025/02/21: updated to Proton Mail Bridge v3.17.0
 * 2024/10/02: updated to Proton Mail Bridge v3.14.0
 * 2024/09/13: updated to Proton Mail Bridge v3.13.0
@@ -208,9 +221,32 @@ docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 
 docker container logs protonmail_bridge
 
 docker exec -it protonmail_bridge /bin/bash
+root@8972584f86d4:/app# pkill bridge
+root@8972584f86d4:/app# /app/bridge --cli
 >>> info
 
-### TrueNAS
+# Testing the SMTP server with telnet:
+telnet 127.0.0.1 12025
+
+                  
+Trying 127.0.0.1...
+Connected to 127.0.0.1.
+Escape character is '^]'.
+220 127.0.0.1 ESMTP Service Ready
+EHLO 127.0.0.1                    # <<< enter this command
+250-Hello 127.0.0.1
+250-PIPELINING
+250-8BITMIME
+250-ENHANCEDSTATUSCODES
+250-CHUNKING
+250-STARTTLS                      # <<< Encryption is supported
+250-AUTH PLAIN LOGIN              # <<< Supported auth protocols
+250 SIZE
+QUIT                              # <<< enter this command
+221 2.0.0 Bye
+Connection closed by foreign host.
+
+### TrueNAS 24.04 or inferior
 ping -c 4 protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local
 nslookup protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local 172.17.0.10
 
