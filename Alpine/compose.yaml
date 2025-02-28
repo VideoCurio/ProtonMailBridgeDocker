@@ -3,9 +3,12 @@ services:
         container_name: protonmail_bridge_alpine
         volumes:
             - mail_data:/root
+        environment:
+            - CONTAINER_SMTP_PORT=25
+            - CONTAINER_IMAP_PORT=143
         ports:
-            - 127.0.0.1:12025:25/tcp
-            - 127.0.0.1:12143:143/tcp
+            - 127.0.0.1:15025:25/tcp
+            - 127.0.0.1:15143:143/tcp
         networks:
             - network20
         restart: unless-stopped

@@ -3,6 +3,9 @@ services:
         container_name: protonmail_bridge
         volumes:
             - mail_data:/root
+        environment:
+            - CONTAINER_SMTP_PORT=25
+            - CONTAINER_IMAP_PORT=143
         ports:
             - 127.0.0.1:12025:25/tcp
             - 127.0.0.1:12143:143/tcp
