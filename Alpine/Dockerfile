@@ -1,4 +1,4 @@
-FROM golang:1.23-alpine AS build
+FROM golang:alpine AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
 
@@ -21,7 +21,7 @@ WORKDIR /build/proton-bridge/
 RUN make build-nogui
 
 # Working stage image
-FROM golang:1.23-alpine
+FROM golang:alpine
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
