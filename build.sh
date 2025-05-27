@@ -8,7 +8,7 @@ printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
 echo "Updating sources images..."
 docker pull golang:bookworm
-docker pull golang:1.23-alpine
+docker pull golang:alpine
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
