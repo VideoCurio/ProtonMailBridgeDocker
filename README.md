@@ -191,6 +191,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelog
 
+* 2025/06/03: updated to Proton Mail Bridge v3.20.1
 * 2025/05/27: updated to Proton Mail Bridge v3.20.0
 * 2025/03/21: updated to Proton Mail Bridge v3.19.0
 * 2025/02/28: updated to Proton Mail Bridge v3.18.0, added environment variables CONTAINER_SMTP_PORT (default set to 25) and CONTAINER_IMAP_PORT (default set to 143), change this only if you have another MTA on the same docker network to prevent port conflict.
