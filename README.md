@@ -191,6 +191,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelog
 
+* 2025/06/16: updated to Proton Mail Bridge v3.21.1
 * 2025/06/10: updated to Proton Mail Bridge v3.21.0
 * 2025/06/03: updated to Proton Mail Bridge v3.20.1
 * 2025/05/27: updated to Proton Mail Bridge v3.20.0
