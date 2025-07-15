@@ -1,6 +1,8 @@
-FROM golang:alpine AS build
+ARG TARGET_PLATFORM
+FROM --platform=${TARGET_PLATFORM} golang:alpine AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
+ARG TARGET_PLATFORM
 
 # Install dependencies
 RUN apk update
@@ -21,11 +23,12 @@ WORKDIR /build/proton-bridge/
 RUN make build-nogui
 
 # Working stage image
-FROM golang:alpine
+FROM --platform=${TARGET_PLATFORM} golang:alpine
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
 # Define arguments and env variables
+ARG TARGET_PLATFORM
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
 # It should be 1025/tcp and 1143/tcp but on some k3s instances it could be 1026 and 1144 (why ?)
 # Launch `netstat -ltnp` on a running container to be sure.
@@ -40,6 +43,8 @@ ENV PROTON_BRIDGE_IMAP_PORT=$ENV_BRIDGE_IMAP_PORT
 ENV PROTON_BRIDGE_HOST=$ENV_BRIDGE_HOST
 ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
+
+ENV ENV_TARGET_PLATFORM=$TARGET_PLATFORM
 
 # Install dependencies
 RUN apk update

@@ -17,6 +17,10 @@ docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 ```bash
 docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 ```
+**(Alternative)** On ARM64 platform, use this lightweight version based on Alpine Linux:
+```bash
+docker pull ghcr.io/videocurio/proton-mail-bridge-alpine-arm64:latest
+```
 **(Optional)** It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
 ```bash
 sudo docker network create --subnet 172.20.0.0/16 network20
@@ -31,6 +35,10 @@ docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 
 ```bash
 wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/compose.yaml
 docker-compose up -d
+# OR for the Alpine version:
+wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/refs/heads/master/Alpine/compose.yaml
+# OR for the ARM64 version:
+wget -O compose.yaml https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/refs/heads/master/Alpine/compose-arm64.yaml
 ```
 
 **(Optional)** Make sure the container is running:
@@ -191,6 +199,8 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelog
 
+* 2025/07/15: Added ARM64/v8 platform image for the Alpine version.
+* 2025/07/12: updated to Proton Mail Bridge v3.21.2 (bug fix update)
 * 2025/06/16: updated to Proton Mail Bridge v3.21.1
 * 2025/06/10: updated to Proton Mail Bridge v3.21.0
 * 2025/06/03: updated to Proton Mail Bridge v3.20.1
