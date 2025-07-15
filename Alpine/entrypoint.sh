@@ -5,7 +5,7 @@ set -ex
 VERSION=$(cat VERSION)
 
 echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
-echo "Copyright (C) 2024  David BASTIEN - See /app/LICENSE.txt "
+echo "Copyright (C) 2025  David BASTIEN - See /app/LICENSE.txt "
 
 # Check if the gpg key exist, if not created it. Should be run only on first launch.
 if [ ! -d "/root/.password-store/" ]; then
@@ -30,6 +30,8 @@ fi
 if ! [[ -v CONTAINER_IMAP_PORT ]]; then
   echo "WARNING! Environment variable CONTAINER_IMAP_PORT is not defined!"
 fi
+
+echo "Build for ${ENV_TARGET_PLATFORM} platform."
 
 # Proton mail bridge listen only on 127.0.0.1 interface, we need to forward TCP traffic on SMTP and IMAP ports:
 socat TCP-LISTEN:"$CONTAINER_SMTP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
