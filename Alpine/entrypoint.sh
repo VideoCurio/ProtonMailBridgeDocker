@@ -31,8 +31,6 @@ if ! [[ -v CONTAINER_IMAP_PORT ]]; then
   echo "WARNING! Environment variable CONTAINER_IMAP_PORT is not defined!"
 fi
 
-echo "Build for ${ENV_TARGET_PLATFORM} platform."
-
 # Proton mail bridge listen only on 127.0.0.1 interface, we need to forward TCP traffic on SMTP and IMAP ports:
 socat TCP-LISTEN:"$CONTAINER_SMTP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
 socat TCP-LISTEN:"$CONTAINER_IMAP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
