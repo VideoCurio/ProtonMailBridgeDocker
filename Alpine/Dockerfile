@@ -1,6 +1,6 @@
 FROM golang:alpine AS build
 LABEL authors="David BASTIEN"
-ARG ENV_PROTONMAIL_BRIDGE_VERSION = "3.21.2"
+ARG ENV_PROTONMAIL_BRIDGE_VERSION="v3.21.2"
 
 # Install dependencies
 RUN apk update
@@ -39,9 +39,8 @@ ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 
 # Install dependencies
-RUN apk update
-RUN apk upgrade
-RUN apk add bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
+RUN apk add --no-cache bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
+RUN apk update --no-cache
 
 # RUN rc-update add dbus
 # RUN touch /run/openrc/softlevel
