@@ -41,12 +41,18 @@ ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
-RUN apk add --no-cache bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
+RUN apk add --no-cache bash \
+    openrc \
+    dbus \
+    dbus-x11 \
+    socat \
+    net-tools \
+    libsecret \
+    pass \
+    gpg \
+    gpg-agent \
+    ca-certificates
 RUN apk update --no-cache
-
-# RUN rc-update add dbus
-# RUN touch /run/openrc/softlevel
-# RUN rc-service dbus start
 
 # Copy executables made during previous stage
 WORKDIR /app/
@@ -60,12 +66,6 @@ RUN chmod u+x /app/entrypoint.sh
 COPY GPGparams.txt /app/
 
 COPY LICENSE.txt /app/
-
-# SMTP and IMAP ports (25/tcp and 143/tcp) are not exposed by default, so you could adjust them if necessary with ENV
-# variables CONTAINER_SMTP_PORT and CONTAINER_IMAP_PORT.
-# See README.md and/or compose.yaml file.
-# EXPOSE ${ENV_CONTAINER_SMTP_PORT}/tcp
-# EXPOSE ${ENV_CONTAINER_IMAP_PORT}/tcp
 
 # Volume to save pass and bridge configurations/data
 VOLUME /root
