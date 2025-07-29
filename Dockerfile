@@ -1,5 +1,9 @@
-FROM golang:bookworm AS build
+FROM golang:1.24.5-bookworm AS build
+
+# Metadata
 LABEL authors="David BASTIEN"
+
+# Define arguments and env variables
 ARG ENV_PROTONMAIL_BRIDGE_VERSION="v3.21.2"
 
 # Install dependencies
@@ -12,7 +16,9 @@ WORKDIR /build/proton-bridge/
 RUN make build-nogui vault-editor
 
 # Working stage image
-FROM golang:bookworm
+FROM debian:12.11-slim
+
+# Metadata
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
@@ -38,7 +44,7 @@ ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash socat net-tools pass ca-certificates libsecret-1-0 \
+    && apt-get install -y --no-install-recommends bash socat pass ca-certificates libsecret-1-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy executables made during previous stage
