@@ -1,22 +1,42 @@
-FROM golang:1.24.5-bookworm AS build
+# Define arguments
+ARG PROTONMAIL_BRIDGE_VERSION="v3.21.2"
+
+FROM golang:1.24.5-alpine3.22 AS build
 
 # Metadata
 LABEL authors="David BASTIEN"
 
-# Define arguments and env variables
-ARG ENV_PROTONMAIL_BRIDGE_VERSION="v3.21.2"
+# Define arguments
+ARG PROTONMAIL_BRIDGE_VERSION
 
 # Install dependencies
-RUN apt-get update && apt-get install -y git build-essential libsecret-1-dev
+RUN apk update --no-cache && \
+    apk add --no-cache \
+      bash \
+      make \
+      gcc \
+      g++ \
+      libc-dev \
+      musl \
+      musl-dev \
+      sed \
+      grep \
+      sed \
+      git \
+      libsecret \
+      libsecret-dev \
+      pass
 
 # Build stage
 WORKDIR /build/
-RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
+RUN git clone -b ${PROTONMAIL_BRIDGE_VERSION} https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
+
+# make
 RUN make build-nogui vault-editor
 
 # Working stage image
-FROM debian:12.11-slim
+FROM alpine:3.22.1
 
 # Metadata
 LABEL authors="David BASTIEN"
@@ -24,6 +44,7 @@ LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailB
 
 # Define arguments and env variables
 ARG TARGETPLATFORM
+ARG PROTONMAIL_BRIDGE_VERSION
 
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
 # It should be 1025/tcp and 1143/tcp but on some k3s instances it could be 1026 and 1144 (why ?)
@@ -41,17 +62,19 @@ ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
+ENV PROTONMAIL_BRIDGE_VERSION=${PROTONMAIL_BRIDGE_VERSION}
 
 # Install dependencies
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends \
-      bash \
-      socat \
-      procps \
-      pass \
-      ca-certificates \
-      libsecret-1-0 \
-    && rm -rf /var/lib/apt/lists/*
+RUN apk update --no-cache && \
+    apk add --no-cache \
+    bash \
+    procps \
+    socat \
+    libsecret \
+    pass \
+    gpg \
+    gpg-agent \
+    ca-certificates
 
 # Copy executables made during previous stage
 WORKDIR /app/
@@ -60,7 +83,6 @@ COPY --from=build /build/proton-bridge/proton-bridge /app/
 COPY --from=build /build/proton-bridge/vault-editor /app/
 
 # Install needed scripts and files
-COPY VERSION /app/
 COPY --chmod=u+x entrypoint.sh /app/
 COPY GPGparams.txt /app/
 

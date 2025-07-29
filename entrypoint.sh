@@ -2,9 +2,7 @@
 
 set -exuo pipefail
 
-VERSION=$(cat VERSION)
-
-echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
+echo "Welcome to my Proton Mail Bridge docker container ${PROTONMAIL_BRIDGE_VERSION:-Unknown Version} !"
 echo "Copyright (C) 2025  David BASTIEN - See /app/LICENSE.txt "
 
 # Check if the gpg key exist, if not created it. Should be run only on first launch.
