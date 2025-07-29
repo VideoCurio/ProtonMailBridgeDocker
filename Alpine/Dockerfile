@@ -3,10 +3,8 @@ LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION="v3.21.2"
 
 # Install dependencies
-RUN apk update
-RUN apk add bash
-RUN apk add make gcc g++ libc-dev musl musl-dev sed grep sed
-RUN apk add git libsecret libsecret-dev pass
+RUN apk add --no-cache bash make gcc g++ libc-dev musl musl-dev sed grep sed git libsecret libsecret-dev pass && \
+    apk update --no-cache
 
 # Build stage
 WORKDIR /build/
@@ -14,7 +12,7 @@ RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/pr
 WORKDIR /build/proton-bridge/
 
 # make
-RUN make build-nogui
+RUN make build-nogui vault-editor
 
 # Working stage image
 FROM golang:alpine
@@ -22,6 +20,7 @@ LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
 # Define arguments and env variables
+ARG TARGETPLATFORM
 
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
 # It should be 1025/tcp and 1143/tcp but on some k3s instances it could be 1026 and 1144 (why ?)
@@ -41,23 +40,22 @@ ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
-RUN apk add --no-cache bash \
-    openrc \
-    dbus \
-    dbus-x11 \
+RUN apk add --no-cache \
+    bash \
     socat \
     net-tools \
     libsecret \
     pass \
     gpg \
     gpg-agent \
-    ca-certificates
-RUN apk update --no-cache
+    ca-certificates && \
+    apk update --no-cache
 
 # Copy executables made during previous stage
 WORKDIR /app/
 COPY --from=build /build/proton-bridge/bridge /app/
 COPY --from=build /build/proton-bridge/proton-bridge /app/
+COPY --from=build /build/proton-bridge/vault-editor /app/
 
 # Install needed scripts and files
 COPY VERSION /app/

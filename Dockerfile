@@ -55,12 +55,6 @@ COPY GPGparams.txt /app/
 
 COPY LICENSE.txt /app/
 
-# SMTP and IMAP ports (25/tcp and 143/tcp) are not exposed by default, so you could adjust them if necessary with ENV
-# variables CONTAINER_SMTP_PORT and CONTAINER_IMAP_PORT.
-# See README.md and/or compose.yaml file.
-# EXPOSE ${ENV_CONTAINER_SMTP_PORT}/tcp
-# EXPOSE ${ENV_CONTAINER_IMAP_PORT}/tcp
-
 # Volume to save pass and bridge configurations/data
 VOLUME /root
 

@@ -15,21 +15,11 @@ if [ ! -d "/root/.password-store/" ]; then
 fi
 
 # Check if some env variables exist.
-if ! [[ -v PROTON_BRIDGE_SMTP_PORT ]]; then
-  echo "WARNING! Environment variable PROTON_BRIDGE_SMTP_PORT is not defined!"
-fi
-if ! [[ -v PROTON_BRIDGE_IMAP_PORT ]]; then
-  echo "WARNING! Environment variable PROTON_BRIDGE_IMAP_PORT is not defined!"
-fi
-if ! [[ -v PROTON_BRIDGE_HOST ]]; then
-  echo "WARNING! Environment variable PROTON_BRIDGE_HOST is not defined!"
-fi
-if ! [[ -v CONTAINER_SMTP_PORT ]]; then
-  echo "WARNING! Environment variable CONTAINER_SMTP_PORT is not defined!"
-fi
-if ! [[ -v CONTAINER_IMAP_PORT ]]; then
-  echo "WARNING! Environment variable CONTAINER_IMAP_PORT is not defined!"
-fi
+PROTON_BRIDGE_SMTP_PORT=${PROTON_BRIDGE_SMTP_PORT:?"is unset or null"}
+PROTON_BRIDGE_IMAP_PORT=${PROTON_BRIDGE_IMAP_PORT:?"is unset or null"}
+PROTON_BRIDGE_HOST=${PROTON_BRIDGE_HOST:?"is unset or null"}
+CONTAINER_SMTP_PORT=${CONTAINER_SMTP_PORT:?"is unset or null"}
+CONTAINER_IMAP_PORT=${CONTAINER_IMAP_PORT:?"is unset or null"}
 
 echo "Build for ${ENV_TARGET_PLATFORM} platform."
 
