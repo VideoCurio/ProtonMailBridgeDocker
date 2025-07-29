@@ -38,6 +38,8 @@ ENV PROTON_BRIDGE_HOST=$ENV_BRIDGE_HOST
 ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 
+ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
+
 # Install dependencies
 RUN apk add --no-cache bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
 RUN apk update --no-cache
