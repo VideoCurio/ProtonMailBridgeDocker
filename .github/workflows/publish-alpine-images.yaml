@@ -9,14 +9,9 @@ concurrency:
   group: "docker-alpine-images"
   cancel-in-progress: false
 
-# Set default working directory
-defaults:
-  run:
-    working-directory: ./Alpine  # Change the working directory to Alpine sub-directory
-
 env:
-  GHCR_REPO: ghcr.io/denuxplays/proton-mail-bridge-alpine
-  #GHCR_REPO: ghcr.io/videocurio/proton-mail-bridge-alpine
+  GHCR_REPO: ghcr.io/denuxplays/proton-mail-bridge
+  #GHCR_REPO: ghcr.io/videocurio/proton-mail-bridge
 
 jobs:
   build:
@@ -64,8 +59,8 @@ jobs:
         id: build
         uses: docker/build-push-action@v6
         with:
-          context: ./Alpine
-          file: ./Alpine/Dockerfile
+          context: ./
+          file: ./alpine.Dockerfile
           platforms: ${{ matrix.platform }}
           labels: ${{ steps.meta.outputs.labels }}
           outputs: type=image,"name=${{ env.GHCR_REPO }}",push-by-digest=true,name-canonical=true,push=true
@@ -114,6 +109,8 @@ jobs:
             type=semver,pattern={{major}}
             type=semver,pattern={{major}}.{{minor}}
             type=semver,pattern={{version}}
+          flavor: |
+            suffix=-alpine,onlatest=true
 
       - name: Login to GHCR
         uses: docker/login-action@v3
