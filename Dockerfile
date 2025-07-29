@@ -9,7 +9,7 @@ RUN apt-get update && apt-get install -y git build-essential libsecret-1-dev
 WORKDIR /build/
 RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
-RUN make build-nogui
+RUN make build-nogui vault-editor
 
 # Working stage image
 FROM golang:bookworm
@@ -37,7 +37,10 @@ ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
-RUN apt-get update && apt-get install -y bash socat net-tools pass ca-certificates libsecret-1-0
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends bash socat net-tools pass ca-certificates libsecret-1-0 \
+    && rm -rf /var/lib/apt/lists/*
+
 # Copy executables made during previous stage
 WORKDIR /app/
 COPY --from=build /build/proton-bridge/bridge /app/
