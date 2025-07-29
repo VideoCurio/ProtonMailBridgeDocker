@@ -25,7 +25,7 @@ _(Merci [Korben](https://korben.info/) pour le logo)_
 
 > [!NOTE]  
 > Switching between `debian` and `alpine` versions of the docker image is not supported, you need to remove the old
-> container and image before switching.
+> container and volume before switching.
 
 <details>
 <summary>Docker</summary>
@@ -43,7 +43,7 @@ docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 sudo docker network create --subnet 172.20.0.0/16 network20
 ```
 
-3. Launch the image in interactive mode to setup your Proton Mail account:  
+3. Launch the image in interactive mode to set up your Proton Mail account:  
    **You MUST provide a path volume storage** (`mkdir /path/to/your/volume/storage`).
 
 ```bash
@@ -87,7 +87,7 @@ wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/
 docker compose up -d
 ```
 
-2. Launch the image in interactive mode to setup your Proton Mail account:
+2. Launch the image in interactive mode to set up your Proton Mail account:
 
 ```bash
 docker compose run --rm protonmail-bridge cli
@@ -220,7 +220,7 @@ It should end with `A sync has finished for name_of_your_account`
 
 The docker image was tested on the latest stable version of [TrueNAS Scale](https://www.truenas.com/truenas-scale/)
 24.10 (at the time of writing),
-follow the [installation custom app screen](https://www.truenas.com/docs/truenasapps/usingcustomapp/) documentation.
+following the [installation custom app screen](https://www.truenas.com/docs/truenasapps/usingcustomapp/) documentation.
 You should define a [Dataset](https://www.truenas.com/docs/scale/24.10/scaleuireference/datasets/) to save your Proton
 mail data before installing the app.
 
@@ -239,7 +239,7 @@ The recommended parameters are:
 
 The docker image was tested on the latest stable version of [TrueNAS Scale](https://www.truenas.com/truenas-scale/) (at
 the time of writing),
-follow
+following
 the [installation custom app screen](https://www.truenas.com/docs/scale/scaleuireference/apps/installcustomappscreens/)
 documentation.
 
@@ -255,7 +255,7 @@ The recommended parameters are:
 6. **Resource limits** - `Check` Enable resource limits, configure the limits to your liking.
 
 About point 3 of the recommended parameters, on Kubernetes (used by TrueNAS Scale for Applications) the Proton Mail
-Bridge applications seems to listening on localhost TCP port 1026 instead of port 1025. In order to confirm this
+Bridge applications seem to listening on localhost TCP port 1026 instead of port 1025. To confirm this
 setting, launch a console on your running Proton Mail bridge pod and see the results of a `netstat -ltpn` command, you
 are looking for a `bridge` program name on `127.0.0.1:1026`address.
 
@@ -354,11 +354,11 @@ the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree
 
 ## License
 
-Copyright (C) 2024 David BASTIEN
+Copyright © 2024 David BASTIEN
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
+the Free Software Foundation, either version 3 of the License or
 (at your option) any later version.
 
 This program is distributed in the hope that it will be useful,
