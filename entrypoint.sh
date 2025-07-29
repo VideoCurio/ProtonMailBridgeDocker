@@ -12,6 +12,16 @@ if [ ! -d "/root/.password-store/" ]; then
     pass init ProtonMailBridge
 fi
 
+# Kill any GPG processes and clean up locks before starting bridge
+pkill -f "gpg\|keyboxd" || true
+rm -rf /root/.gnupg/*.lock /root/.gnupg/*/*.lock /root/.gnupg/*/lock 2>/dev/null || true
+sleep 1
+
+# Start fresh GPG agent
+GPG_TTY=$(tty)
+export GPG_TTY
+gpg-agent --daemon --allow-preset-passphrase
+
 # Execute cli
 if [[ $1 == cli ]]; then
     # Kill any running instance to "unlock" the bridge
@@ -23,16 +33,6 @@ if [[ $1 == cli ]]; then
 
     exit 0
 fi
-
-# Kill any GPG processes and clean up locks before starting bridge
-pkill -f "gpg\|keyboxd" || true
-rm -rf /root/.gnupg/*.lock /root/.gnupg/*/*.lock /root/.gnupg/*/lock 2>/dev/null || true
-sleep 1
-
-# Start fresh GPG agent
-GPG_TTY=$(tty)
-export GPG_TTY
-gpg-agent --daemon --allow-preset-passphrase
 
 # Check if some env variables exist.
 PROTON_BRIDGE_SMTP_PORT=${PROTON_BRIDGE_SMTP_PORT:?"is unset or null"}
