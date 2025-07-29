@@ -15,11 +15,11 @@ if [ ! -d "/root/.password-store/" ]; then
 fi
 
 # Check if some env variables exist.
-PROTON_BRIDGE_SMTP_PORT = ${PROTON_BRIDGE_SMTP_PORT:?"is unset or null"}
-PROTON_BRIDGE_IMAP_PORT = ${PROTON_BRIDGE_IMAP_PORT:?"is unset or null"}
-PROTON_BRIDGE_HOST = ${PROTON_BRIDGE_HOST:?"is unset or null"}
-CONTAINER_SMTP_PORT = ${CONTAINER_SMTP_PORT:?"is unset or null"}
-CONTAINER_IMAP_PORT = ${CONTAINER_IMAP_PORT:?"is unset or null"}
+PROTON_BRIDGE_SMTP_PORT=${PROTON_BRIDGE_SMTP_PORT:?"is unset or null"}
+PROTON_BRIDGE_IMAP_PORT=${PROTON_BRIDGE_IMAP_PORT:?"is unset or null"}
+PROTON_BRIDGE_HOST=${PROTON_BRIDGE_HOST:?"is unset or null"}
+CONTAINER_SMTP_PORT=${CONTAINER_SMTP_PORT:?"is unset or null"}
+CONTAINER_IMAP_PORT=${CONTAINER_IMAP_PORT:?"is unset or null"}
 
 echo "Build for ${ENV_TARGET_PLATFORM} platform."
 

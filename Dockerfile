@@ -45,6 +45,7 @@ RUN apt-get update \
 WORKDIR /app/
 COPY --from=build /build/proton-bridge/bridge /app/
 COPY --from=build /build/proton-bridge/proton-bridge /app/
+COPY --from=build /build/proton-bridge/vault-editor /app/
 
 # Install needed scripts and files
 COPY VERSION /app/
