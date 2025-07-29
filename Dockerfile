@@ -44,7 +44,13 @@ ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
 RUN apt-get update \
-    && apt-get install -y --no-install-recommends bash socat pass ca-certificates libsecret-1-0 \
+    && apt-get install -y --no-install-recommends \
+      bash \
+      socat \
+      procps \
+      pass \
+      ca-certificates \
+      libsecret-1-0 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy executables made during previous stage
@@ -55,8 +61,7 @@ COPY --from=build /build/proton-bridge/vault-editor /app/
 
 # Install needed scripts and files
 COPY VERSION /app/
-COPY entrypoint.sh /app/
-RUN chmod u+x /app/entrypoint.sh
+COPY --chmod=u+x entrypoint.sh /app/
 COPY GPGparams.txt /app/
 
 COPY LICENSE.txt /app/
