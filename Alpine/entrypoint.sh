@@ -37,6 +37,13 @@ echo "Build for ${ENV_TARGET_PLATFORM} platform."
 socat TCP-LISTEN:"$CONTAINER_SMTP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
 socat TCP-LISTEN:"$CONTAINER_IMAP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
 
+# Alpine GPG / keyboxd bug
+if [ -f "/root/.gnupg/S.keyboxd" ]; then
+  echo "Killing keyboxd..."
+  #kill keyboxd
+  rm /root/.gnupg/S.keyboxd
+fi
+
 # Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty
 mkfifo faketty

@@ -43,7 +43,7 @@ ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 # Install dependencies
 RUN apk update
 RUN apk upgrade
-RUN apk add bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
+RUN apk add bash socat net-tools libsecret pass gpg gpg-agent gnupg-keyboxd ca-certificates
 
 # RUN rc-update add dbus
 # RUN touch /run/openrc/softlevel
