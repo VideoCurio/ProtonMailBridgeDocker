@@ -1,8 +1,8 @@
-ARG TARGET_PLATFORM
-FROM --platform=${TARGET_PLATFORM} golang:alpine AS build
+FROM --platform=$TARGETPLATFORM golang:alpine AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
-ARG TARGET_PLATFORM
+ARG TARGETPLATFORM
+ARG BUILDPLATFORM
 
 # Install dependencies
 RUN apk update
@@ -14,21 +14,15 @@ RUN apk add git libsecret libsecret-dev pass
 WORKDIR /build/
 RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
-# Not needed anymore, golang 1.23 seems to have solved this.
-# Solve bug https://github.com/mattn/go-sqlite3/pull/1177
-# COPY fix_1177.sh /build/proton-bridge/
-# RUN chmod u+x /build/proton-bridge/fix_1177.sh
-# RUN /bin/bash -c '/build/proton-bridge/fix_1177.sh'
-# make
-RUN make build-nogui
+RUN make build-nogui vault-editor
 
 # Working stage image
-FROM --platform=${TARGET_PLATFORM} golang:alpine
+FROM --platform=$TARGETPLATFORM golang:alpine
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
 
 # Define arguments and env variables
-ARG TARGET_PLATFORM
+ARG TARGETPLATFORM
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
 # It should be 1025/tcp and 1143/tcp but on some k3s instances it could be 1026 and 1144 (why ?)
 # Launch `netstat -ltnp` on a running container to be sure.
@@ -44,7 +38,7 @@ ENV PROTON_BRIDGE_HOST=$ENV_BRIDGE_HOST
 ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 
-ENV ENV_TARGET_PLATFORM=$TARGET_PLATFORM
+ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
 RUN apk update
@@ -56,11 +50,13 @@ RUN apk add bash socat net-tools libsecret pass gpg gpg-agent ca-certificates
 # RUN rc-service dbus start
 
 # Copy executables made during previous stage
-WORKDIR /app/
-COPY --from=build /build/proton-bridge/bridge /app/
-COPY --from=build /build/proton-bridge/proton-bridge /app/
+WORKDIR /usr/bin/
+COPY --from=build /build/proton-bridge/bridge /usr/bin/
+COPY --from=build /build/proton-bridge/proton-bridge /usr/bin/
+COPY --from=build /build/proton-bridge/vault-editor /usr/bin/
 
 # Install needed scripts and files
+WORKDIR /app/
 COPY VERSION /app/
 COPY entrypoint.sh /app/
 RUN chmod u+x /app/entrypoint.sh

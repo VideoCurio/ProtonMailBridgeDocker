@@ -40,6 +40,6 @@ socat TCP-LISTEN:"$CONTAINER_IMAP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_
 # Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty
 mkfifo faketty
-cat faketty | /app/bridge --cli
+cat faketty | /usr/bin/bridge --cli
 
 echo "Done."

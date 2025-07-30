@@ -17,10 +17,6 @@ docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 ```bash
 docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 ```
-**(Alternative)** On ARM64 platform, use this lightweight version based on Alpine Linux:
-```bash
-docker pull ghcr.io/videocurio/proton-mail-bridge-alpine-arm64:latest
-```
 **(Optional)** It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
 ```bash
 sudo docker network create --subnet 172.20.0.0/16 network20
@@ -37,8 +33,6 @@ wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/
 docker-compose up -d
 # OR for the Alpine version:
 wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/refs/heads/master/Alpine/compose.yaml
-# OR for the ARM64 version:
-wget -O compose.yaml https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/refs/heads/master/Alpine/compose-arm64.yaml
 ```
 
 **(Optional)** Make sure the container is running:

@@ -1,12 +1,25 @@
 #!/usr/bin/env bash
 
+set -e
+
 PROTONMAIL_BRIDGE_VERSION=$(cat VERSION)
 
 echo "Building Proton Mail Bridge docker images ${PROTONMAIL_BRIDGE_VERSION} !"
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
+echo "Building Alpine multi-platform image..."
+# QEMU and binfmt required
+# Multi-platform images MSUT be pushed to a container registry (like github), cannot be stored locally.
+#export GH_TOKEN=XXXXXXXXX
+#echo $GH_TOKEN | docker login ghcr.io -u dxxxx@xxxxxxx.com --password-stdin
+#docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --push --platform=linux/amd64,linux/arm64 -t ghcr.io/videocurio/dev-alpine:"$PROTONMAIL_BRIDGE_VERSION" .
+#docker pull ghcr.io/videocurio/dev-alpine:"$PROTONMAIL_BRIDGE_VERSION"
+
+printf "\e[32m================================\e[0m \n"
+printf "\e[32m================================\e[0m \n"
 echo "Building Debian AMD64 image..."
+# Building a local image
 docker pull --platform linux/amd64 golang:bookworm
 docker build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --build-arg TARGET_PLATFORM="linux/amd64" --platform linux/amd64 --tag=ghcr.io/videocurio/proton-mail-bridge .
 docker image tag ghcr.io/videocurio/proton-mail-bridge:latest ghcr.io/videocurio/proton-mail-bridge:"$PROTONMAIL_BRIDGE_VERSION"
@@ -49,8 +62,8 @@ docker images | grep proton-mail
 
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
-while true; do
 
+while true; do
 read -p "Push docker images to ghcr.io ? (y/n) " yn
 
 case $yn in
@@ -69,5 +82,4 @@ case $yn in
     exit;;
   * ) echo "Invalid response";;
 esac
-
 done
