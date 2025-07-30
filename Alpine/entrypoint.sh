@@ -44,8 +44,8 @@ echo "Killing previous gpg keyboxd programs..."
 pkill keyboxd || true
 pkill gpg || true
 #rm /root/.gnupg/S.keyboxd
-rm /root/.gnupg/S.*
-rm /root/.gnupg/*/*.lock
+rm /root/.gnupg/S.* || true
+rm /root/.gnupg/*/*.lock || true
 sleep 1
 gpg-agent --daemon --allow-preset-passphrase
 #fi
