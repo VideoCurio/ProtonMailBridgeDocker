@@ -1,21 +1,21 @@
 services:
     protonmail-bridge:
-        container_name: dev_alpine
+        container_name: dev_debian
         volumes:
-            - mail_data_dev_alpine:/root
+            - mail_data_dev_debian:/root
         environment:
             - CONTAINER_SMTP_PORT=25
             - CONTAINER_IMAP_PORT=143
         ports:
-            - "127.0.0.1:15025:25/tcp"
-            - "127.0.0.1:15143:143/tcp"
+            - "127.0.0.1:12025:25/tcp"
+            - "127.0.0.1:12143:143/tcp"
         networks:
             - network20
         restart: unless-stopped
-        image: ghcr.io/videocurio/dev-alpine:v3.21.2
+        image: ghcr.io/videocurio/dev-debian:v3.21.2
 networks:
     network20:
         external: true
         name: network20
 volumes:
-    mail_data_dev_alpine:
+    mail_data_dev_debian:
