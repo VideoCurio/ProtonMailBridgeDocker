@@ -65,7 +65,7 @@ docker exec -it protonmail_bridge_alpine /bin/bash
 # First we need to kill the default bridge startup instance (only one instance of bridge can run at the same time)
 root@8972584f86d4:/app# pkill bridge
 # Login to your Proton account:
-root@8972584f86d4:/app# /app/bridge --cli
+root@8972584f86d4:/app# /usr/bin/bridge --cli
 ....
       Welcome to Proton Mail Bridge interactive shell
 ....
