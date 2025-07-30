@@ -12,6 +12,7 @@ if [ ! -d "/root/.password-store/" ]; then
   gpg --generate-key --batch /app/GPGparams.txt
   gpg --list-keys
   pass init ProtonMailBridge
+  sleep 1
 fi
 
 # Check if some env variables exist.
@@ -38,11 +39,16 @@ socat TCP-LISTEN:"$CONTAINER_SMTP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_
 socat TCP-LISTEN:"$CONTAINER_IMAP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
 
 # Alpine GPG / keyboxd bug
-if [ -f "/root/.gnupg/S.keyboxd" ]; then
-  echo "Killing keyboxd..."
-  #kill keyboxd
-  rm /root/.gnupg/S.keyboxd
-fi
+#if [ -f "/root/.gnupg/S.keyboxd" ]; then
+echo "Killing previous gpg keyboxd programs..."
+pkill keyboxd || true
+pkill gpg || true
+#rm /root/.gnupg/S.keyboxd
+rm /root/.gnupg/S.*
+rm /root/.gnupg/*/*.lock
+sleep 1
+gpg-agent --daemon --allow-preset-passphrase
+#fi
 
 # Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty
