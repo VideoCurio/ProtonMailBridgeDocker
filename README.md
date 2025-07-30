@@ -193,6 +193,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Changelog
 
+* 2025/07/30: Added multi-platform docker buildx support.
 * 2025/07/15: Added ARM64/v8 platform image for the Alpine version.
 * 2025/07/12: updated to Proton Mail Bridge v3.21.2 (bug fix update)
 * 2025/06/16: updated to Proton Mail Bridge v3.21.1
