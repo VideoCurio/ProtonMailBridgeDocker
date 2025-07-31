@@ -148,7 +148,7 @@ docker-compose restart
 ```bash
 docker container logs protonmail_bridge
 ```
-It should end with `A sync has finished for name_of_your_account`
+It should end with `A sync has finished for <name_of_your_account>`
 
 ## Notes
 
@@ -167,7 +167,7 @@ The recommended parameters are:
 4. **Storage Configuration** - Storage Add > Type: `Host path` / Mount Path: `/root` / Host path: `/mnt/path/to/your/protonmail-dataset` 
 5. **Resource Configuration** - `Check` Enable resource limits, configure the limits to your liking.
 
-### TrueNAS Scale 24.04 or inferior (TrueNAS apps as Kubernetes)
+### (_Obsolete!_) TrueNAS Scale 24.04 or inferior (TrueNAS apps as Kubernetes)
 The docker image was tested on the latest stable version of [TrueNAS Scale](https://www.truenas.com/truenas-scale/) (at the time of writing),
 follow the [installation custom app screen](https://www.truenas.com/docs/scale/scaleuireference/apps/installcustomappscreens/) documentation.
 
@@ -212,57 +212,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Developers notes
 
-Build / test docker image, see: [Docker documentation](https://docs.docker.com/language/python/containerize/)
-```bash
-# Local tests:
-docker pull golang:bookworm
-
-git clone https://github.com/VideoCurio/ProtonMailBridgeDocker.git
-cd /path/to/ProtonMailBridgeDocker/
-docker build --tag=ghcr.io/videocurio/proton-mail-bridge .
-docker images | grep proton-mail
-
-docker run -it --rm --entrypoint /bin/bash ghcr.io/videocurio/proton-mail-bridge:latest
-# (Optional) It is recommended to set up a custom docker network for all of your containers to use, for DNS / network-alias resolution:
-sudo docker network create --subnet 172.20.0.0/16 network20
-
-mkdir /path/to/your/volume/storage
-docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:14025:25/tcp -p 127.0.0.1:14143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
-docker container logs protonmail_bridge
-
-docker exec -it protonmail_bridge /bin/bash
-root@8972584f86d4:/app# pkill bridge
-root@8972584f86d4:/app# /app/bridge --cli
->>> info
-
-# Testing the SMTP server with telnet:
-telnet 127.0.0.1 12025
-
-                  
-Trying 127.0.0.1...
-Connected to 127.0.0.1.
-Escape character is '^]'.
-220 127.0.0.1 ESMTP Service Ready
-EHLO 127.0.0.1                    # <<< enter this command
-250-Hello 127.0.0.1
-250-PIPELINING
-250-8BITMIME
-250-ENHANCEDSTATUSCODES
-250-CHUNKING
-250-STARTTLS                      # <<< Encryption is supported
-250-AUTH PLAIN LOGIN              # <<< Supported auth protocols
-250 SIZE
-QUIT                              # <<< enter this command
-221 2.0.0 Bye
-Connection closed by foreign host.
-
-### TrueNAS 24.04 or inferior
-ping -c 4 protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local
-nslookup protonmail-bridge-ix-chart.ix-protonmail-bridge.svc.cluster.local 172.17.0.10
-
-```
-
-There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a patch.
+There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a Pull Request. Images `ghcr.io/videocurio/dev-debian` and `ghcr.io/videocurio/dev-alpine` are build on the `testing` branch. For development purpose only ! Do NOT use them in production.
 
 An [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/master/Alpine).
 

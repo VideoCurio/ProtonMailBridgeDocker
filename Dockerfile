@@ -5,13 +5,17 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
 # Install dependencies
-RUN apt-get update && apt-get install -y git build-essential libsecret-1-dev
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y git build-essential libsecret-1-dev
 
 # Build stage
 WORKDIR /build/
-RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
+RUN set -eux; \
+    git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
-RUN make build-nogui vault-editor
+RUN set -eux; \
+    make build-nogui vault-editor
 
 # Working stage image
 FROM --platform=$TARGETPLATFORM golang:bookworm
@@ -38,7 +42,9 @@ ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
-RUN apt-get update && apt-get install -y bash socat net-tools pass ca-certificates libsecret-1-0
+RUN set -eux; \
+    apt-get update; \
+    apt-get install -y bash socat net-tools pass ca-certificates libsecret-1-0
 # Copy executables made during previous stage
 WORKDIR /usr/bin/
 COPY --from=build /build/proton-bridge/bridge /usr/bin/

@@ -14,8 +14,11 @@ printf "\e[32m================================\e[0m \n"
 echo "Building Debian multi-platform image..."
 # QEMU and binfmt required
 # Multi-platform images MUST be pushed to a container registry (like github), cannot be stored locally.
-docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 -t ghcr.io/videocurio/dev-debian:"$PROTONMAIL_BRIDGE_VERSION" .
-#docker pull ghcr.io/videocurio/dev-debian:"$PROTONMAIL_BRIDGE_VERSION"
+#docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 --tag ghcr.io/videocurio/dev-debian:"$PROTONMAIL_BRIDGE_VERSION" --tag ghcr.io/videocurio/dev-debian:latest .
+docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 --tag ghcr.io/videocurio/proton-mail-bridge:"$PROTONMAIL_BRIDGE_VERSION" --tag ghcr.io/videocurio/proton-mail-bridge:latest .
+docker pull ghcr.io/videocurio/proton-mail-bridge:"$PROTONMAIL_BRIDGE_VERSION"
+docker pull ghcr.io/videocurio/proton-mail-bridge:latest
+#docker image tag ghcr.io/videocurio/dev-debian:"$PROTONMAIL_BRIDGE_VERSION" ghcr.io/videocurio/dev-debian:latest
 
 # Build a local image
 #printf "\e[32m================================\e[0m \n"
@@ -30,7 +33,10 @@ cp ../VERSION VERSION
 printf "\e[32m================================\e[0m \n"
 printf "\e[32m================================\e[0m \n"
 echo "Building Alpine multi-platform image..."
-docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 -t ghcr.io/videocurio/dev-alpine:"$PROTONMAIL_BRIDGE_VERSION" .
+#docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 --tag ghcr.io/videocurio/dev-alpine:"$PROTONMAIL_BRIDGE_VERSION" --tag ghcr.io/videocurio/dev-alpine:latest .
+docker buildx build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="$PROTONMAIL_BRIDGE_VERSION" --pull --push --platform=linux/amd64,linux/arm64 --tag ghcr.io/videocurio/proton-mail-bridge-alpine:"$PROTONMAIL_BRIDGE_VERSION" --tag ghcr.io/videocurio/proton-mail-bridge-alpine:latest .
+docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:"$PROTONMAIL_BRIDGE_VERSION"
+docker pull ghcr.io/videocurio/proton-mail-bridge-alpine:latest
 
 # Tests images
 # docker stop protonmail_bridge && docker rm protonmail_bridge

@@ -12,7 +12,7 @@ services:
         networks:
             - network20
         restart: unless-stopped
-        image: ghcr.io/videocurio/dev-alpine:v3.21.2
+        image: ghcr.io/videocurio/dev-alpine:latest
 networks:
     network20:
         external: true
