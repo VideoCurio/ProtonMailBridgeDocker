@@ -5,16 +5,18 @@ ARG TARGETPLATFORM
 ARG BUILDPLATFORM
 
 # Install dependencies
-RUN apk update
-RUN apk add bash
-RUN apk add make gcc g++ libc-dev musl musl-dev sed grep sed
-RUN apk add git libsecret libsecret-dev pass
+RUN set -eux; \
+    apk update; \
+    apk add bash make gcc g++ libc-dev musl musl-dev sed grep sed; \
+    apk add git libsecret libsecret-dev pass
 
 # Build stage
 WORKDIR /build/
-RUN git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
+RUN set -eux; \
+    git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
-RUN make build-nogui vault-editor
+RUN set -eux; \
+    make build-nogui vault-editor
 
 # Working stage image
 FROM --platform=$TARGETPLATFORM golang:alpine
@@ -41,9 +43,10 @@ ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
-RUN apk update
-RUN apk upgrade
-RUN apk add bash socat net-tools libsecret pass gpg gpg-agent gnupg-keyboxd ca-certificates
+RUN set -eux; \
+    apk update; \
+    apk upgrade; \
+    apk add bash socat net-tools libsecret pass gpg gpg-agent gnupg-keyboxd ca-certificates
 
 # RUN rc-update add dbus
 # RUN touch /run/openrc/softlevel

@@ -212,7 +212,7 @@ The SMTP server is now available from TCP port 12025 on your server's LAN IP add
 
 ## Developers notes
 
-There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a Pull Request.
+There is a [testing branch](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/testing) available if you want to submit a Pull Request. Images `ghcr.io/videocurio/dev-debian` and `ghcr.io/videocurio/dev-alpine` are build on the `testing` branch. For development purpose only ! Do NOT use them in production.
 
 An [Alpine Linux](https://www.alpinelinux.org/) version for a small image base footprint is available in the [Alpine directory](https://github.com/VideoCurio/ProtonMailBridgeDocker/tree/master/Alpine).
 
