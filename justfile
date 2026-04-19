@@ -81,6 +81,16 @@ terminal:
 terminal-dev:
   docker exec -it dev_debian /bin/bash
 
+# Interactive setup (login) for production. Note: requires container restart after exit.
+setup:
+  docker exec -it protonmail_bridge pkill bridge || true
+  docker exec -it protonmail_bridge /usr/bin/bridge --cli
+
+# Interactive setup (login) for development. Note: requires container restart after exit.
+setup-dev:
+  docker exec -it dev_debian pkill bridge || true
+  docker exec -it dev_debian /usr/bin/bridge --cli
+
 # Docker remove all build cache
 prune:
   docker builder prune -a
