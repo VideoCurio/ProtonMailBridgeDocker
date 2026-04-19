@@ -49,6 +49,38 @@ login EMAIL:
   echo "Log in ghcr.io..."
   echo "$GH_TOKEN" | docker login ghcr.io -u {{EMAIL}} --password-stdin
 
+# Print logs for production
+logs:
+  docker compose -f compose.yaml logs -f
+
+# Print logs for development
+logs-dev:
+  docker compose -f compose-dev.yaml logs -f
+
+# Run the docker container of the multi-arch image
+run:
+  docker compose -f compose.yaml up -d
+
+# Run the docker container of the developers image.
+run-dev:
+  docker compose -f compose-dev.yaml up -d
+
+# Stop and remove production containers
+stop:
+  docker compose -f compose.yaml down
+
+# Stop and remove development containers
+stop-dev:
+  docker compose -f compose-dev.yaml down
+
+# Open a bash terminal inside the running production container
+terminal:
+  docker exec -it protonmail_bridge /bin/bash
+
+# Open a bash terminal inside a running developer container.
+terminal-dev:
+  docker exec -it dev_debian /bin/bash
+
 # Docker remove all build cache
 prune:
   docker builder prune -a
