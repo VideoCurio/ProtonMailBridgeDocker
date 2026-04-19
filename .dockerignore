@@ -1,0 +1,13 @@
+.git
+.env
+Alpine/
+Dockerfile
+justfile
+compose.yaml
+compose-dev.yaml
+logo.png
+README.md
+AGENTS.md
+LICENSE.txt
+*.log
+faketty
