@@ -46,6 +46,7 @@ RUN set -eux; \
     bash \
     socat \
     net-tools \
+    procps \
     pass \
     ca-certificates \
     libsecret-1-0 \
