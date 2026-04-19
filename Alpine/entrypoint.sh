@@ -6,6 +6,8 @@ VERSION=$(cat VERSION)
 
 echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
 echo "Copyright (C) 2025  David BASTIEN - See /app/LICENSE.txt "
+echo "WARNING: This Alpine version is DEPRECATED and will no longer be updated."
+echo "Please migrate to the Debian-based version."
 
 # Check if the gpg key exist, if not created it. Should be run only on first launch.
 if [ ! -d "/root/.password-store/" ]; then

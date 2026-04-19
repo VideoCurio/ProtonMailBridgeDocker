@@ -22,6 +22,8 @@ RUN set -eux; \
 FROM --platform=$TARGETPLATFORM golang:alpine
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
+LABEL status="deprecated"
+LABEL note="Use the Debian slim version instead"
 
 # Define arguments and env variables
 ARG TARGETPLATFORM
