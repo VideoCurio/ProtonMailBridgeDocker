@@ -34,16 +34,21 @@ lint:
   shellcheck --color=always -f tty -x -P ./*.sh && echo 'Shellcheck: SUCCESS'
 
 # login to ghcr.io for docker image push
-login EMAIL:
+login-ghcr EMAIL:
   #!/usr/bin/env bash
-  envFilePath="./.env"
-  if [ ! -f "$envFilePath" ]; then
-    echo "Local environment file .env not found! Please create one with GH_TOKEN="
-    exit 1
+  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
+    GH_TOKEN=$(gh auth token)
+  else
+    envFilePath="./.env"
+    if [ ! -f "$envFilePath" ]; then
+      echo "Local environment file .env not found! Please create one with GH_TOKEN= or use `gh` command."
+      exit 1
+    fi
+    source "$envFilePath"
   fi
-  source "$envFilePath"
+
   if [ -z "$GH_TOKEN" ]; then
-    echo "Error: GH_TOKEN is not defined or empty in $envFilePath"
+    echo "Error: GH_TOKEN is not defined or empty"
     exit 1
   fi
   echo "Log in ghcr.io..."
