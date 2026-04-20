@@ -26,11 +26,14 @@ The goal of this project is to provide a lightweight, secure, and multi-arch Doc
 
 ## Common Agent Workflows
 
-### Building the Image
+### Building and Running
 Use the `justfile` recipes instead of manual docker commands:
 ```bash
 just build-local v3.24.1  # Local AMD64 build
-just build v3.24.1        # Multi-arch build and push (requires buildx)
+just build v3.24.1        # Multi-arch build and push
+just run                  # Start production container
+just stop                 # Stop production container
+just setup                # Interactive login (pkill + bridge --cli)
 ```
 
 ### Debugging

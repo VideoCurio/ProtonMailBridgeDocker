@@ -62,25 +62,37 @@ __OR__ (docker compose version):
 docker-compose logs
 ```
 
+## Quick Management with Just
+
+If you have [just](https://github.com/casey/just) installed, you can manage the container with these simple commands:
+
+*   **Start:** `just run`
+*   **Stop:** `just stop`
+*   **Logs:** `just logs`
+*   **Setup/Login:** `just setup`
+*   **Terminal:** `just terminal`
+
 ## Setup
 
-Now, you need to open a bash terminal on the current running container and use
-the Proton Bridge interactive command line:
+Now, you need to login to your Proton account. The easiest way is to use the `just` recipe:
 
 ```bash
-docker exec -it protonmail_bridge /bin/bash
+just setup
 ```
 
-```
-# First we need to kill the default bridge startup instance (only one instance of bridge can run at the same time)
-root@8972584f86d4:/app# pkill bridge
-# Login to your Proton account:
-root@8972584f86d4:/app# /usr/bin/bridge --cli
-....
-      Welcome to Proton Mail Bridge interactive shell
-....
->>> info
-No active accounts. Please add account to continue.
+**OR** manually if you don't have `just`:
+
+1.  Open a bash terminal on the current running container:
+    ```bash
+    docker exec -it protonmail_bridge /bin/bash
+    ```
+2.  Kill the default bridge startup instance and launch the CLI:
+    ```bash
+    pkill bridge
+    /usr/bin/bridge --cli
+    ```
+
+Once the interactive shell is open:
 
 # Type help for a list of all commands:
 >>> help
