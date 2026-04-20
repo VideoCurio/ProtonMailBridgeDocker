@@ -38,7 +38,7 @@ __OR__ (docker compose version):
 
 ```bash
 wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/compose.yaml
-docker-compose up -d
+docker compose up -d
 ```
 
 __(Optional)__ Make sure the container is running:
@@ -59,48 +59,49 @@ docker container logs protonmail_bridge
 __OR__ (docker compose version):
 
 ```bash
-docker-compose logs
+docker compose logs
 ```
 
 ## Quick Management with Just
 
-If you have [just](https://github.com/casey/just) installed, you can manage the container with these simple commands:
+If you have [just](https://github.com/casey/just) installed, you can manage the
+container with these simple commands:
 
-*   **Start:** `just run`
-*   **Stop:** `just stop`
-*   **Logs:** `just logs`
-*   **Setup/Login:** `just setup`
-*   **Terminal:** `just terminal`
+* __Start:__ `just run`
+* __Stop:__ `just stop`
+* __Logs:__ `just logs`
+* __Setup/Login:__ `just setup`
+* __Terminal:__ `just terminal`
 
 ## Setup
 
-Now, you need to login to your Proton account. The easiest way is to use the `just` recipe:
+Now, you need to login to your Proton account. Open a bash terminal on the current
+running container:
 
 ```bash
-just setup
+docker exec -it protonmail_bridge /bin/bash
 ```
-
-**OR** manually if you don't have `just`:
-
-1.  Open a bash terminal on the current running container:
-    ```bash
-    docker exec -it protonmail_bridge /bin/bash
-    ```
-2.  Kill the default bridge startup instance and launch the CLI:
-    ```bash
-    pkill bridge
-    /usr/bin/bridge --cli
-    ```
 
 Once the interactive shell is open:
 
-# Type help for a list of all commands:
+```bash
+# First we need to kill the default bridge startup instance (only one instance of bridge can run at the same time)
+root@8972584f86d4:/app# pkill bridge
+# Login to your Proton account:
+root@8972584f86d4:/app# /usr/bin/bridge --cli
+....
+      Welcome to Proton Mail Bridge interactive shell
+....
+>>> info
+No active accounts. Please add account to continue.
+
+# Type help for a list of all commands
 >>> help
-# Login to a Proton account (!MUST! be a paid plan to use this client), follow the instructions on screen:
-# Tip: Use Ctrl+Shift+V to paste on most Linux terminal.
+# Login to a Proton account (!MUST! be a paid plan to use this client), follow the instructions on screen
+# Tip: Use Ctrl+Shift+V to paste on most Linux terminal
 >>> login
 Username: test_account@proton.me
-Password: 
+Password:
 Authenticating ...
 Two factor code: 123456
 Account test_account was added successfully.
@@ -110,7 +111,7 @@ Sync (test_account): 1.0% (Elapsed: 0.5s, ETA: 46.0s)
 Sync (test_account): 99.9% (Elapsed: 50.4s, ETA: 0.4s)
 A sync has finished for test_account.
 >>>
-# Success !
+# Success
 ```
 
 __IF__ you are using multiple domain names or email addresses, you __SHOULD__ switch
@@ -175,7 +176,7 @@ docker container restart protonmail_bridge
 __OR__ (docker compose version):
 
 ```bash
-docker-compose restart
+docker compose restart
 ```
 
 __(Optional)__ You can check the bridge command line output with:
@@ -267,4 +268,3 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 Made from [Debian 13 (trixie) Go image](https://hub.docker.com/_/golang/) and
 latest [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master)
-
