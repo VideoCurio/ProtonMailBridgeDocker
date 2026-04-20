@@ -1,5 +1,6 @@
 .git
 .env
+.obsidian/
 Alpine/
 Dockerfile
 justfile
