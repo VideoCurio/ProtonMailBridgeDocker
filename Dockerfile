@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM golang:bookworm AS build
+FROM --platform=$TARGETPLATFORM golang:trixie AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
 ARG TARGETPLATFORM
@@ -6,27 +6,28 @@ ARG BUILDPLATFORM
 
 # Install dependencies
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y git build-essential libsecret-1-dev
+  apt-get update; \
+  apt-get install -y git build-essential libfido2-dev libsecret-1-dev libcbor-dev
 
 # Build stage
 WORKDIR /build/
 RUN set -eux; \
-    git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
+  git clone -b $ENV_PROTONMAIL_BRIDGE_VERSION https://github.com/ProtonMail/proton-bridge.git
 WORKDIR /build/proton-bridge/
 RUN set -eux; \
-    make build-nogui vault-editor
+  make build-nogui vault-editor
 
 # Working stage image
-FROM --platform=$TARGETPLATFORM golang:bookworm
+FROM --platform=$TARGETPLATFORM debian:trixie-slim
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
+LABEL org.opencontainers.image.description="A docker version of the Proton Mail Bridge command line interface, providing local SMTP/IMAP servers for Proton Mail accounts."
+LABEL org.opencontainers.image.title="Proton Mail Bridge Docker"
+LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
 
 # Define arguments and env variables
 ARG TARGETPLATFORM
 # Indicate (NOT define) the ports/network interface really used by Proton bridge mail.
-# It should be 1025/tcp and 1143/tcp but on some k3s instances it could be 1026 and 1144 (why ?)
-# Launch `netstat -ltnp` on a running container to be sure.
 ARG ENV_BRIDGE_SMTP_PORT=1025
 ARG ENV_BRIDGE_IMAP_PORT=1143
 ARG ENV_BRIDGE_HOST=127.0.0.1
@@ -43,8 +44,20 @@ ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
 # Install dependencies
 RUN set -eux; \
-    apt-get update; \
-    apt-get install -y bash socat net-tools pass ca-certificates libsecret-1-0
+  apt-get update; \
+  apt-get install -y --no-install-recommends \
+    bash \
+    socat \
+    net-tools \
+    procps \
+    pass \
+    ca-certificates \
+    libsecret-1-0 \
+    libfido2-1 \
+    gnupg \
+  ; \
+  rm -rf /var/lib/apt/lists/*
+
 # Copy executables made during previous stage
 WORKDIR /usr/bin/
 COPY --from=build /build/proton-bridge/bridge /usr/bin/
@@ -59,12 +72,6 @@ RUN chmod u+x /app/entrypoint.sh
 COPY GPGparams.txt /app/
 
 COPY LICENSE.txt /app/
-
-# SMTP and IMAP ports (25/tcp and 143/tcp) are not exposed by default, so you could adjust them if necessary with ENV
-# variables CONTAINER_SMTP_PORT and CONTAINER_IMAP_PORT.
-# See README.md and/or compose.yaml file.
-# EXPOSE ${ENV_CONTAINER_SMTP_PORT}/tcp
-# EXPOSE ${ENV_CONTAINER_IMAP_PORT}/tcp
 
 # Volume to save pass and bridge configurations/data
 VOLUME /root

@@ -43,3 +43,4 @@ mkfifo faketty
 cat faketty | /usr/bin/bridge --cli
 
 echo "Done."
+
