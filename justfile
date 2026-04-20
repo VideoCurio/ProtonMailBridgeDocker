@@ -62,6 +62,14 @@ logs:
 logs-dev:
   docker compose -f compose-dev.yaml logs -f
 
+# Restart the docker container
+restart:
+  docker compose -f compose.yaml restart
+
+# Restart the docker container of the developers image
+restart-dev:
+  docker compose -f compose-dev.yaml restart
+
 # Run the docker container of the multi-arch image
 run:
   docker compose -f compose.yaml up -d
