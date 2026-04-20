@@ -9,6 +9,9 @@ default:
 
 # Build a multi-arch docker image
 build VERSION:
+  @echo "Checking for multi-arch builder..."
+  docker buildx ls | grep -q multiarch-builder || docker buildx create --use --name multiarch-builder
+  docker buildx use multiarch-builder
   @echo "Building Debian multi-platform image..."
   docker pull --platform linux/amd64 golang:trixie
   docker pull --platform linux/amd64 debian:trixie-slim
