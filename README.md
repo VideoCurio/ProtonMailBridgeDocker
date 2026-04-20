@@ -62,6 +62,20 @@ __OR__ (docker compose version):
 docker compose logs
 ```
 
+### Notes
+
+The following error messages are expected in the container logs after the first
+run or when launching the command `/usr/bin/bridge --cli`:
+
+```bash
+WARN[Apr 20 14:13:49.022] An issue occurred when reading the cache file  error="open /root/.cache/protonmail/bridge-v3/unleash_startup_cache/unleash_startup_flags.json: no such file or directory" pkg=unleash-startup
+WARN[Apr 20 14:13:50.310] Failed to add test credentials to keychain    error="failed to open dbus connection: exec: \"dbus-launch\": executable file not found in $PATH" helper="*keychain.SecretServiceDBusHelper"
+WARN[Apr 20 14:13:50.369] no vault key found, generating new            error="could not get keychain item: credentials not found in native keychain"
+```
+
+The docker container will use `gpg` and `pass` to store credentials not the
+DBUS secret-service.
+
 ## Quick Management with Just
 
 If you have [just](https://github.com/casey/just) installed, you can manage the
