@@ -21,6 +21,9 @@ RUN set -eux; \
 FROM --platform=$TARGETPLATFORM debian:trixie-slim
 LABEL authors="David BASTIEN"
 LABEL org.opencontainers.image.source="https://github.com/VideoCurio/ProtonMailBridgeDocker"
+LABEL org.opencontainers.image.description="A docker version of the Proton Mail Bridge command line interface, providing local SMTP/IMAP servers for Proton Mail accounts."
+LABEL org.opencontainers.image.title="Proton Mail Bridge Docker"
+LABEL org.opencontainers.image.licenses="GPL-3.0-or-later"
 
 # Define arguments and env variables
 ARG TARGETPLATFORM
