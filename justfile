@@ -23,6 +23,8 @@ build-local VERSION:
   docker pull --platform linux/amd64 debian:trixie-slim
   docker build --build-arg ENV_PROTONMAIL_BRIDGE_VERSION="{{VERSION}}" --build-arg TARGET_PLATFORM="linux/amd64" --platform linux/amd64 --tag=ghcr.io/videocurio/dev-debian:"{{VERSION}}" .
   docker image tag ghcr.io/videocurio/dev-debian:"{{VERSION}}" ghcr.io/videocurio/dev-debian:latest
+  #docker push ghcr.io/videocurio/dev-debian:"{{VERSION}}"
+  #docker push ghcr.io/videocurio/dev-debian:latest
 
 # Inspect docker image
 inspect:
@@ -36,16 +38,12 @@ lint:
 # login to ghcr.io for docker image push
 login-ghcr EMAIL:
   #!/usr/bin/env bash
-  if command -v gh >/dev/null 2>&1 && gh auth status >/dev/null 2>&1; then
-    GH_TOKEN=$(gh auth token)
-  else
-    envFilePath="./.env"
-    if [ ! -f "$envFilePath" ]; then
-      echo "Local environment file .env not found! Please create one with GH_TOKEN= or use `gh` command."
-      exit 1
-    fi
-    source "$envFilePath"
+  envFilePath="./.env"
+  if [ ! -f "$envFilePath" ]; then
+    echo "Local environment file .env not found! Please create one with GH_TOKEN= or use `gh` command."
+    exit 1
   fi
+  source "$envFilePath"
 
   if [ -z "$GH_TOKEN" ]; then
     echo "Error: GH_TOKEN is not defined or empty"
