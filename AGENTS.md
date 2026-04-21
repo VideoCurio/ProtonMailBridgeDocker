@@ -42,6 +42,13 @@ The image includes `net-tools` and `socat`. To check if the bridge is listening 
 docker exec <container_name> netstat -ltnp
 ```
 
+### Health Status
+The container includes a `HEALTHCHECK` that monitors the availability of the SMTP and IMAP ports. To check the current health status:
+```bash
+docker inspect --format='{{json .State.Health}}' <container_name>
+```
+The health check runs every 30 seconds after a 15-second initial startup period.
+
 ### Environment Variables
 | Variable | Description | Default |
 | :--- | :--- | :--- |

@@ -71,6 +71,14 @@ login-ghcr EMAIL:
   echo "Log in ghcr.io..."
   echo "$GH_TOKEN" | docker login ghcr.io -u {{EMAIL}} --password-stdin
 
+# Check the health status of the production container
+health:
+  @docker inspect --format='{{ '{{' }}json .State.Health{{ '}}' }}' protonmail_bridge
+
+# Check the health status of the development container
+health-dev:
+  @docker inspect --format='{{ '{{' }}json .State.Health{{ '}}' }}' dev_debian
+
 # Print logs for production
 logs:
   docker compose -f compose.yaml logs -f

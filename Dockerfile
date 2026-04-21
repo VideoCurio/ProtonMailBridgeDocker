@@ -76,4 +76,9 @@ COPY LICENSE.txt /app/
 # Volume to save pass and bridge configurations/data
 VOLUME /root
 
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD netstat -ltn | grep -q ":$CONTAINER_SMTP_PORT " && \
+      netstat -ltn | grep -q ":$CONTAINER_IMAP_PORT " || exit 1
+
 ENTRYPOINT ["/app/entrypoint.sh"]
