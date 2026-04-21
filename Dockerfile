@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM golang:trixie AS build
+FROM --platform=$TARGETPLATFORM golang:1.26-trixie AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
 ARG TARGETPLATFORM
@@ -55,6 +55,7 @@ RUN set -eux; \
     libsecret-1-0 \
     libfido2-1 \
     gnupg \
+    tini \
   ; \
   rm -rf /var/lib/apt/lists/*
 
@@ -76,4 +77,9 @@ COPY LICENSE.txt /app/
 # Volume to save pass and bridge configurations/data
 VOLUME /root
 
-ENTRYPOINT ["/app/entrypoint.sh"]
+# Healthcheck
+HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
+  CMD netstat -ltn | grep -q ":$CONTAINER_SMTP_PORT " && \
+      netstat -ltn | grep -q ":$CONTAINER_IMAP_PORT " || exit 1
+
+ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]

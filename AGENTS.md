@@ -9,8 +9,9 @@ The goal of this project is to provide a lightweight, secure, and multi-arch Doc
 ## Technical Architecture
 
 *   **Base OS:** `debian:trixie-slim` (chosen for the best balance between size and library compatibility, specifically for `glibc` and `libsecret`).
-*   **Build System:** Multi-stage Docker build using `golang:trixie` for compilation and `debian:trixie-slim` for the runtime.
+*   **Build System:** Multi-stage Docker build using `golang:1.26-trixie` for compilation and `debian:trixie-slim` for the runtime.
 *   **Process Management:**
+    *   `tini` is used as the init system (PID 1) to handle signal forwarding and zombie reaping.
     *   The bridge is a CLI application that listens only on `127.0.0.1`.
     *   `socat` is used to forward external traffic from the container's ports (default 25/143) to the bridge's internal ports (default 1025/1143).
     *   Secrets are managed via `gpg` and `pass` (standard requirement for Proton Bridge CLI).
@@ -41,6 +42,13 @@ The image includes `net-tools` and `socat`. To check if the bridge is listening 
 ```bash
 docker exec <container_name> netstat -ltnp
 ```
+
+### Health Status
+The container includes a `HEALTHCHECK` that monitors the availability of the SMTP and IMAP ports. To check the current health status:
+```bash
+docker inspect --format='{{json .State.Health}}' <container_name>
+```
+The health check runs every 30 seconds after a 15-second initial startup period.
 
 ### Environment Variables
 | Variable | Description | Default |

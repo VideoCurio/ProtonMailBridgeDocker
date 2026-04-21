@@ -86,6 +86,7 @@ container with these simple commands:
 * __Logs:__ `just logs`
 * __Setup/Login:__ `just setup`
 * __Terminal:__ `just terminal`
+* __Health:__ `just health`
 
 ## Setup
 
@@ -230,6 +231,10 @@ The recommended parameters are:
 
 ## Changelog
 
+* 2026/04/21:
+  * Added `tini` as entrypoint.
+  * Added docker health check.
+  * Updated to Proton Mail Bridge v3.24.2
 * 2026/04/19:
   * Alpine image marked as DEPRECATED and replaced by a Debian slim image.
   * Updated to Proton Mail Bridge v3.24.1
@@ -280,5 +285,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Sources
 
-Made from [Debian 13 (trixie) Go image](https://hub.docker.com/_/golang/) and
+Made from [Debian 13 (trixie) Go 1.26 image](https://hub.docker.com/_/golang/) and
 latest [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master)
