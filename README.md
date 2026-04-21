@@ -86,6 +86,7 @@ container with these simple commands:
 * __Logs:__ `just logs`
 * __Setup/Login:__ `just setup`
 * __Terminal:__ `just terminal`
+* __Health:__ `just health`
 
 ## Setup
 
