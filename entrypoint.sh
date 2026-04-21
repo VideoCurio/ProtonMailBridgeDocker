@@ -2,6 +2,16 @@
 
 set -ex
 
+# Cleanup function to stop background processes
+cleanup() {
+  echo "Stopping background processes..."
+  kill $(jobs -p) 2>/dev/null || true
+  exit 0
+}
+
+# Trap signals
+trap cleanup SIGINT SIGTERM
+
 VERSION=$(cat VERSION)
 
 echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
