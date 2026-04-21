@@ -231,6 +231,10 @@ The recommended parameters are:
 
 ## Changelog
 
+* 2026/04/21:
+  * Added `tini` as entrypoint.
+  * Added docker health check.
+  * Updated to Proton Mail Bridge v3.24.2
 * 2026/04/19:
   * Alpine image marked as DEPRECATED and replaced by a Debian slim image.
   * Updated to Proton Mail Bridge v3.24.1
