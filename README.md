@@ -280,5 +280,5 @@ along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 ## Sources
 
-Made from [Debian 13 (trixie) Go image](https://hub.docker.com/_/golang/) and
+Made from [Debian 13 (trixie) Go 1.26 image](https://hub.docker.com/_/golang/) and
 latest [Proton Mail Bridge sources](https://github.com/ProtonMail/proton-bridge/tree/master)

@@ -1,4 +1,4 @@
-FROM --platform=$TARGETPLATFORM golang:trixie AS build
+FROM --platform=$TARGETPLATFORM golang:1.26-trixie AS build
 LABEL authors="David BASTIEN"
 ARG ENV_PROTONMAIL_BRIDGE_VERSION
 ARG TARGETPLATFORM

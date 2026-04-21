@@ -5,7 +5,7 @@ set -ex
 VERSION=$(cat VERSION)
 
 echo "Welcome to my Proton Mail Bridge docker container ${VERSION} !"
-echo "Copyright (C) 2026  David BASTIEN - See /app/LICENSE.txt "
+echo "Copyright (C) 2026 David BASTIEN - See /app/LICENSE.txt "
 
 # Check if the gpg key exist, if not created it. Should be run only on first launch.
 if [ ! -d "/root/.password-store/" ]; then
