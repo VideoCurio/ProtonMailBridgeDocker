@@ -4,9 +4,9 @@ A docker version of the [Proton mail Bridge](https://proton.me/mail/bridge) comm
 line interface. It creates a local SMTP server, so other docker containers can send
 emails via your Proton email account.
 
-__!WARNING!__ As of the time of this writing, you need a paid plan (Mail Plus,
-Proton Unlimited or Proton for Business) to be able to log in. It won't work for
-free account.
+> [!WARNING]
+> As of the time of this writing, you need a paid plan (Mail Plus, Proton Unlimited
+> or Proton for Business) to be able to log in. It will **NOT** work for free account.
 
 ![Logo Proton Mail Bridge docker](https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/logo.png "Merci à Korben pour le logo!")
 _(Merci [Korben](https://korben.info/) pour le logo)_
@@ -19,7 +19,7 @@ Download the latest docker image from:
 docker pull ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
-__(Optional)__ It is recommended to set up a custom docker network for all of your
+**(Optional)** It is recommended to set up a custom docker network for all of your
 containers to use, for DNS / network-alias resolution:
 
 ```bash
@@ -28,20 +28,20 @@ sudo docker network create --subnet 172.20.0.0/16 network20
 
 Launch it with the following command to expose TCP ports 12025 for SMTP and 12143
 for IMAP on your local network interface.
-___You MUST provide a path volume storage___ (`mkdir /path/to/your/volume/storage`).
+_**You MUST provide a path volume storage**_ (`mkdir /path/to/your/volume/storage`).
 
 ```bash
 docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
-__OR__ (docker compose version):
+**OR** (docker compose version):
 
 ```bash
 wget https://raw.githubusercontent.com/VideoCurio/ProtonMailBridgeDocker/master/compose.yaml
 docker compose up -d
 ```
 
-__(Optional)__ Make sure the container is running:
+**(Optional)** Make sure the container is running:
 
 ```bash
 docker ps
@@ -49,14 +49,14 @@ CONTAINER ID   IMAGE                                          COMMAND           
 d9932fb7136b   ghcr.io/videocurio/proton-mail-bridge:latest   "/app/entrypoint.sh"     About a minute ago   Up About a minute   127.0.0.1:12025->25/tcp, 127.0.0.1:12143->143/tcp   protonmail_bridge
 ```
 
-__(Optional)__ You can check the bridge command line output with, you should see
+**(Optional)** You can check the bridge command line output with, you should see
 a bridge in ASCII art:
 
 ```bash
 docker container logs protonmail_bridge
 ```
 
-__OR__ (docker compose version):
+**OR** (docker compose version):
 
 ```bash
 docker compose logs
@@ -81,12 +81,12 @@ DBUS secret-service.
 If you have [just](https://github.com/casey/just) installed, you can manage the
 container with these simple commands:
 
-* __Start:__ `just run`
-* __Stop:__ `just stop`
-* __Logs:__ `just logs`
-* __Setup/Login:__ `just setup`
-* __Terminal:__ `just terminal`
-* __Health:__ `just health`
+* **Start:** `just run`
+* **Stop:** `just stop`
+* **Logs:** `just logs`
+* **Setup/Login:** `just setup`
+* **Terminal:** `just terminal`
+* **Health:** `just health`
 
 ## Setup
 
@@ -129,7 +129,7 @@ A sync has finished for test_account.
 # Success
 ```
 
-__IF__ you are using multiple domain names or email addresses, you __SHOULD__ switch
+**IF** you are using multiple domain names or email addresses, you **SHOULD** switch
 to split address mode (it will set credentials for each address in the account).
 
 It will sync the account again, time to grab a coffee.
@@ -148,9 +148,9 @@ A sync has finished for test_account.
 
 Use the following information to connect via an SMTP client. The port numbers for
 the SMTP/IMAP connections are 12025 and 12143 (see command `docker ps`),
-__NOT__ the one provided by the `info`command.
+**NOT** the one provided by the `info`command.
 
-You ___MUST copy the username AND password___ from the info command (the password
+You _**MUST copy the username AND password**_ from the info command (the password
 is random and different from your Proton account):
 
 ```bash
@@ -182,19 +182,19 @@ See a list of [all Proton bridge commands available here](https://proton.me/supp
 or use the `help` command.
 
 We have killed the default bridge instance by exiting it during the previous step,
-so we __MUST__ restart the container:
+so we **MUST** restart the container:
 
 ```bash
 docker container restart protonmail_bridge
 ```
 
-__OR__ (docker compose version):
+**OR** (docker compose version):
 
 ```bash
 docker compose restart
 ```
 
-__(Optional)__ You can check the bridge command line output with:
+**(Optional)** You can check the bridge command line output with:
 
 ```bash
 docker container logs protonmail_bridge
@@ -218,15 +218,15 @@ to save your Proton mail data before installing the app.
 
 The recommended parameters are:
 
-1. __Image Configuration__ - Image repository: `ghcr.io/videocurio/proton-mail-bridge`
+1. **Image Configuration** - Image repository: `ghcr.io/videocurio/proton-mail-bridge`
    / Image tag: `latest` / Pull policy: `Always pull...`
-2. __Container Configuration__ - Entrypoint: `/app/entrypoint.sh` / Restart
+2. **Container Configuration** - Entrypoint: `/app/entrypoint.sh` / Restart
    Policy: `Unless stopped`
-3. __Network Configuration__ - Add > Container Port: `25` / Host Port: `12025`
+3. **Network Configuration** - Add > Container Port: `25` / Host Port: `12025`
    (Or any other non-used port) / Protocol: `TCP`
-4. __Storage Configuration__ - Storage Add > Type: `Host path` / Mount Path: `/root`
+4. **Storage Configuration** - Storage Add > Type: `Host path` / Mount Path: `/root`
    / Host path: `/mnt/path/to/your/protonmail-dataset`
-5. __Resource Configuration__ - `Check` Enable resource limits, configure the
+5. **Resource Configuration** - `Check` Enable resource limits, configure the
    limits to your liking.
 
 ## Changelog
