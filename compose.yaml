@@ -6,9 +6,15 @@ services:
         environment:
             - CONTAINER_SMTP_PORT=25
             - CONTAINER_IMAP_PORT=143
+            - CONTAINER_HEALTH_PORT=8080
+            # Required for the functional HTTP health check (real SMTP auth).
+            # Take them from the bridge `info` command and put them in a .env file.
+            - BRIDGE_USER=${BRIDGE_USER:-}
+            - BRIDGE_PASSWORD=${BRIDGE_PASSWORD:-}
         ports:
             - "127.0.0.1:12025:25/tcp"
             - "127.0.0.1:12143:143/tcp"
+            - "127.0.0.1:12080:8080/tcp"
         networks:
             - network20
         restart: unless-stopped

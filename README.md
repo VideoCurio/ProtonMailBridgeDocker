@@ -26,12 +26,12 @@ containers to use, for DNS / network-alias resolution:
 sudo docker network create --subnet 172.20.0.0/16 network20
 ```
 
-Launch it with the following command to expose TCP ports 12025 for SMTP and 12143
-for IMAP on your local network interface.
+Launch it with the following command to expose TCP ports 12025 for SMTP, 12143
+for IMAP and 12080 for the HTTP health endpoint on your local network interface.
 _**You MUST provide a path volume storage**_ (`mkdir /path/to/your/volume/storage`).
 
 ```bash
-docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
+docker run -d --name=protonmail_bridge -v /path/to/your/volume/storage:/root -p 127.0.0.1:12025:25/tcp -p 127.0.0.1:12143:143/tcp -p 127.0.0.1:12080:8080/tcp --network network20 --restart=unless-stopped ghcr.io/videocurio/proton-mail-bridge:latest
 ```
 
 **OR** (docker compose version):
@@ -229,8 +229,64 @@ The recommended parameters are:
 5. **Resource Configuration** - `Check` Enable resource limits, configure the
    limits to your liking.
 
+## Health monitoring
+
+The container exposes a **functional HTTP health endpoint** so you can monitor
+the service with [Uptime Kuma](https://github.com/louislam/uptime-kuma) or any
+other HTTP monitor. Unlike a plain TCP/port check (which Uptime Kuma already
+does natively), this endpoint performs a **real SMTP authentication** against
+the bridge — the only reliable way to detect a logged-out / removed account.
+It connects, does STARTTLS + `AUTH LOGIN`, then `QUIT`s **before sending any
+mail**. It returns:
+
+* `HTTP 200` `{"status":"healthy","check":"smtp-auth"}` — authentication
+  succeeded, the account is logged in and the bridge is up.
+* `HTTP 503` `{"status":"unhealthy","check":"smtp-auth"}` — authentication
+  failed (account logged out, or bridge process down).
+* `HTTP 503` `{"status":"unconfigured",...}` — `BRIDGE_USER` /
+  `BRIDGE_PASSWORD` are not set, so the functional check cannot run.
+
+### Configuration
+
+The functional check needs the bridge credentials (the **bridge-generated**
+username and password, taken from the `info` command — *not* your Proton
+account password). Put them in a `.env` file next to your `compose.yaml`:
+
+```bash
+BRIDGE_USER=you@proton.me
+BRIDGE_PASSWORD=the-random-bridge-password
+```
+
+The endpoint is served on container port `8080`, mapped to `127.0.0.1:12080`
+in the provided `compose.yaml` (change the internal port with
+`CONTAINER_HEALTH_PORT`).
+
+Quick test:
+
+```bash
+curl -i http://127.0.0.1:12080/
+```
+
+In Uptime Kuma, create an **HTTP(s)** monitor pointing at
+`http://<host>:12080/` (or `http://protonmail_bridge:8080/` if Uptime Kuma runs
+on the same docker network). Keep the accepted status code at `200`.
+
+> [!NOTE]
+> The same probe powers the built-in docker `HEALTHCHECK` (see `just health`):
+> it uses the SMTP auth check when credentials are set, and falls back to a
+> basic ports-listening liveness check otherwise.
+>
+> Limitation: a *silent* session expiry where the bridge still accepts local
+> authentication but can no longer reach Proton cannot be detected without
+> actually sending a mail.
+
 ## Changelog
 
+* 2026/06/02:
+  * Added a functional HTTP health endpoint (default port `8080`) that performs
+    a real SMTP authentication, for monitoring with Uptime Kuma and similar
+    tools. Configurable via `CONTAINER_HEALTH_PORT`, `BRIDGE_USER` and
+    `BRIDGE_PASSWORD`.
 * 2026/04/21:
   * Added `tini` as entrypoint.
   * Added docker health check.
