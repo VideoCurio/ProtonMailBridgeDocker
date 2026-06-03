@@ -40,12 +40,19 @@ fi
 if ! [[ -v CONTAINER_IMAP_PORT ]]; then
   echo "WARNING! Environment variable CONTAINER_IMAP_PORT is not defined!"
 fi
+if ! [[ -v CONTAINER_HEALTH_PORT ]]; then
+  echo "WARNING! Environment variable CONTAINER_HEALTH_PORT is not defined!"
+fi
 
 echo "Build for ${ENV_TARGET_PLATFORM} platform."
 
 # Proton mail bridge listen only on 127.0.0.1 interface, we need to forward TCP traffic on SMTP and IMAP ports:
 socat TCP-LISTEN:"$CONTAINER_SMTP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_SMTP_PORT" &
 socat TCP-LISTEN:"$CONTAINER_IMAP_PORT",fork TCP:"$PROTON_BRIDGE_HOST":"$PROTON_BRIDGE_IMAP_PORT" &
+
+# Expose a lightweight HTTP health endpoint (for Uptime Kuma and similar monitors).
+# Each connection runs /app/healthcheck-http.sh which reports SMTP/IMAP availability.
+socat TCP-LISTEN:"$CONTAINER_HEALTH_PORT",fork,reuseaddr EXEC:/app/healthcheck-http.sh &
 
 # Start a default Proton Mail Bridge on a fake tty, so it won't stop because of EOF
 rm -f faketty

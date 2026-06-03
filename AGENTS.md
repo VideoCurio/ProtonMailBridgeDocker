@@ -20,7 +20,9 @@ The goal of this project is to provide a lightweight, secure, and multi-arch Doc
 ## Key Files
 
 *   `Dockerfile`: Defines the multi-stage build and runtime environment.
-*   `entrypoint.sh`: Handles GPG/Pass initialization, starts `socat` proxies, and launches the bridge.
+*   `entrypoint.sh`: Handles GPG/Pass initialization, starts `socat` proxies (SMTP, IMAP and the HTTP health endpoint), and launches the bridge.
+*   `health-probe.sh`: Shared health logic. Performs a real SMTP authentication (STARTTLS + AUTH LOGIN, no mail sent) via `swaks` when `BRIDGE_USER`/`BRIDGE_PASSWORD` are set; exit `0` healthy, `2` unconfigured, `1` unhealthy. Used by both the docker `HEALTHCHECK` and the HTTP endpoint.
+*   `healthcheck-http.sh`: Per-connection script served by `socat` that runs `health-probe.sh` and maps its result to an HTTP 200/503 response.
 *   `justfile`: Contains recipes for building (`build`, `build-local`), logging into GHCR (`login`), and linting.
 *   `VERSION`: Tracks the Proton Mail Bridge version being built.
 *   `GPGparams.txt`: Batch configuration for non-interactive GPG key generation during the first run.
@@ -50,6 +52,11 @@ docker inspect --format='{{json .State.Health}}' <container_name>
 ```
 The health check runs every 30 seconds after a 15-second initial startup period.
 
+There is also a network-facing **functional HTTP health endpoint** (default container port `8080`, served by `socat` + `healthcheck-http.sh` + `health-probe.sh`) intended for external monitors such as Uptime Kuma. It performs a real SMTP authentication and returns HTTP `200` (healthy / authenticated), `503` (unhealthy or unconfigured) with a small JSON body. It requires `BRIDGE_USER`/`BRIDGE_PASSWORD` (the bridge-generated credentials from the `info` command). Test it with:
+```bash
+curl -i http://127.0.0.1:12080/
+```
+
 ### Environment Variables
 | Variable | Description | Default |
 | :--- | :--- | :--- |
@@ -57,6 +64,9 @@ The health check runs every 30 seconds after a 15-second initial startup period.
 | `CONTAINER_IMAP_PORT` | Port exposed by the container for IMAP | `143` |
 | `PROTON_BRIDGE_SMTP_PORT` | Internal port the bridge listens on | `1025` |
 | `PROTON_BRIDGE_IMAP_PORT` | Internal port the bridge listens on | `1143` |
+| `CONTAINER_HEALTH_PORT` | Port serving the HTTP health endpoint | `8080` |
+| `BRIDGE_USER` | Bridge username for the functional health check | _(unset)_ |
+| `BRIDGE_PASSWORD` | Bridge password for the functional health check | _(unset)_ |
 
 ## Design Constraints
 

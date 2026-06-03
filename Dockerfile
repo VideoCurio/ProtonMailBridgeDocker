@@ -34,11 +34,14 @@ ARG ENV_BRIDGE_HOST=127.0.0.1
 # Change ENV_CONTAINER_SMTP_PORT only if you have a docker port conflict on host network namespace.
 ARG ENV_CONTAINER_SMTP_PORT=25
 ARG ENV_CONTAINER_IMAP_PORT=143
+# Port serving the HTTP health endpoint (for Uptime Kuma and similar monitors).
+ARG ENV_CONTAINER_HEALTH_PORT=8080
 ENV PROTON_BRIDGE_SMTP_PORT=$ENV_BRIDGE_SMTP_PORT
 ENV PROTON_BRIDGE_IMAP_PORT=$ENV_BRIDGE_IMAP_PORT
 ENV PROTON_BRIDGE_HOST=$ENV_BRIDGE_HOST
 ENV CONTAINER_SMTP_PORT=$ENV_CONTAINER_SMTP_PORT
 ENV CONTAINER_IMAP_PORT=$ENV_CONTAINER_IMAP_PORT
+ENV CONTAINER_HEALTH_PORT=$ENV_CONTAINER_HEALTH_PORT
 
 ENV ENV_TARGET_PLATFORM=$TARGETPLATFORM
 
@@ -56,6 +59,8 @@ RUN set -eux; \
     libfido2-1 \
     gnupg \
     tini \
+    swaks \
+    libnet-ssleay-perl \
   ; \
   rm -rf /var/lib/apt/lists/*
 
@@ -69,7 +74,9 @@ COPY --from=build /build/proton-bridge/vault-editor /usr/bin/
 WORKDIR /app/
 COPY VERSION /app/
 COPY entrypoint.sh /app/
-RUN chmod u+x /app/entrypoint.sh
+COPY healthcheck-http.sh /app/
+COPY health-probe.sh /app/
+RUN chmod u+x /app/entrypoint.sh /app/healthcheck-http.sh /app/health-probe.sh
 COPY GPGparams.txt /app/
 
 COPY LICENSE.txt /app/
@@ -77,9 +84,11 @@ COPY LICENSE.txt /app/
 # Volume to save pass and bridge configurations/data
 VOLUME /root
 
-# Healthcheck
-HEALTHCHECK --interval=30s --timeout=5s --start-period=15s --retries=3 \
-  CMD netstat -ltn | grep -q ":$CONTAINER_SMTP_PORT " && \
-      netstat -ltn | grep -q ":$CONTAINER_IMAP_PORT " || exit 1
+# Healthcheck. Uses the shared probe: a real SMTP authentication when
+# BRIDGE_USER/BRIDGE_PASSWORD are set (exit 0), otherwise a basic ports-listening
+# liveness check (exit 2, still treated as healthy here). Only a genuine failure
+# (exit 1) marks the container unhealthy.
+HEALTHCHECK --interval=30s --timeout=15s --start-period=30s --retries=3 \
+  CMD /app/health-probe.sh; [ "$?" -ne 1 ]
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]
