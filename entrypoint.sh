@@ -5,7 +5,10 @@ set -ex
 # Cleanup function to stop background processes
 cleanup() {
   echo "Stopping background processes..."
-  kill $(jobs -p) 2>/dev/null || true
+  local pids
+  pids=$(jobs -p)
+  # shellcheck disable=SC2086
+  kill ${pids} 2>/dev/null || true
   exit 0
 }
 
