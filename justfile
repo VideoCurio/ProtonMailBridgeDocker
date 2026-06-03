@@ -52,7 +52,7 @@ inspect:
 # Linting Bash scripts.
 lint:
   @echo 'Linting Bash files...'
-  shellcheck --color=always -f tty -x -P ./*.sh && echo 'Shellcheck: SUCCESS'
+  shellcheck --color=always -f tty -x ./*.sh && echo 'Shellcheck: SUCCESS'
 
 # login to ghcr.io for docker image push
 login-ghcr EMAIL:
